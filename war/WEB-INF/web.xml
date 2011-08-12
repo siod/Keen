@@ -15,6 +15,27 @@
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/keen/greet</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Upload</servlet-name>
+    <servlet-class>keen.server.Upload</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Upload</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Serve</servlet-name>
+    <servlet-class>keen.server.Serve</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Serve</servlet-name>
+    <url-pattern>/serve</url-pattern>
+  </servlet-mapping>
+  
   
   <!-- Default page to serve -->
   <welcome-file-list>
