@@ -18,8 +18,15 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import com.google.appengine.api.blobstore.BlobKey;
 
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.Transform;
+
 public class ImageAdaptor {
 	static enum FILETYPE { JPG, GIF, PNG }
+	static int THUMBNAIL_LENGTH = 200;
+	static int THUMBNAIL_WIDTH = 200;
 	Entity _image;
 
 
@@ -69,4 +76,12 @@ public class ImageAdaptor {
 		return (BlobKey)_image.getProperty("blobkey");
 	}
 
+	public byte[] getThumbnail() {
+		ImagesService is = ImagesServiceFactory.getImagesService();
+		Image oldImage = ImagesServiceFactory.makeImageFromBlob(GetBlobKey());
+		Transform resize = ImagesServiceFactory.makeResize(THUMBNAIL_WIDTH,THUMBNAIL_LENGTH);
+		Image newImage = is.applyTransform(resize, oldImage);
+		return newImage.getImageData();
+
+	}
 }
