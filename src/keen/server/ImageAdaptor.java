@@ -25,8 +25,10 @@ import com.google.appengine.api.images.Transform;
 
 public class ImageAdaptor {
 	static enum FILETYPE { JPG, GIF, PNG }
-	static int THUMBNAIL_LENGTH = 200;
-	static int THUMBNAIL_WIDTH = 200;
+	static int[] THUMBNAIL_LENGTH = {200,600};
+	static int[] THUMBNAIL_WIDTH = {200, 600};
+	static int SMALL = 0;
+	static int LARGE = 1;
 	Entity _image;
 
 
@@ -76,12 +78,22 @@ public class ImageAdaptor {
 		return (BlobKey)_image.getProperty("blobkey");
 	}
 
-	public byte[] getThumbnail() {
+	public String GetServingUrl() {
+		ImagesService is = ImagesServiceFactory.getImagesService();
+		return is.getServingUrl(GetBlobKey());
+	}
+	/*
+	public byte[][] getThumbnail() {
+		byte[][] thumbs = new byte[2][];
 		ImagesService is = ImagesServiceFactory.getImagesService();
 		Image oldImage = ImagesServiceFactory.makeImageFromBlob(GetBlobKey());
-		Transform resize = ImagesServiceFactory.makeResize(THUMBNAIL_WIDTH,THUMBNAIL_LENGTH);
+		Transform resize = ImagesServiceFactory.makeResize(THUMBNAIL_WIDTH[SMALL],THUMBNAIL_LENGTH[SMALL]);
 		Image newImage = is.applyTransform(resize, oldImage);
-		return newImage.getImageData();
-
+		thumbs[0] = newImage.getImageData();
+		resize = ImagesServiceFactory.makeResize(THUMBNAIL_WIDTH[LARGE],THUMBNAIL_LENGTH[LARGE]);
+		newImage = is.applyTransform(resize, oldImage);
+		thumbs[LARGE] = newImage.getImageData();
+		return thumbs;
 	}
+	*/
 }

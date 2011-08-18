@@ -16,10 +16,21 @@
 
 <html>
 	<head>
-		<title> View images uploaded </title>
-		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-		<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title> View images uploaded Galleriffic slideshow</title>
+		<link type="text/css" rel="stylesheet" href="/css/main.css" />
+		<link rel="stylesheet" href="css/basic.css" type="text/css" />
+		<link rel="stylesheet" href="css/galleriffic.css" type="text/css" />
+		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+		<script type="text/javascript" src="js/jquery.galleriffic.js"></script>
+		<script type="text/javascript" src="js/jquery.opacityrollover.js"></script>
+		<!-- We only want the thunbnails to display when javascript is disabled -->
+		<script type="text/javascript">
+			document.write('<style>.noscript { display: none; }</style>');
+		</script>
+ 	<head>
 	<body>
+	<div id="content">
 
 <%
 		UserService us = UserServiceFactory.getUserService();
@@ -50,27 +61,94 @@
 	} else {
 	%>
 	<p> Images </p>
+	<!-- Start Advanced Gallery Html Containers -->
+	<div id="gallery" class="content">
+		<div id="controls" class="controls"></div>
+		<div class="slideshow-container">
+			<div id="loading" class="loader"></div>
+			<div id="slideshow" class="slideshow"></div>
+		</div>
+		<div id="caption" class="caption-container"></div>
+	</div>
+	<div id="thumbs" class="navigation">
+		<ul class="thumbs noscript">
+
 	<%
 	for (Entity ent : images) {
 		ImageAdaptor image = new ImageAdaptor(ent);
 		%>
-		<div>
-		<p> Image by user <%= image.getUser() %>
-			Author <%= image.GetAuthor() %>
-			Tags <%= image.GetTag() %> 
-			Subjects <%= image.GetSubject() %> 
-			Comments <%= image.GetComment() %> 
-			Dates <%= image.GetDate() %> 
-			Tags <%= image.GetTag() %> 
-			</p>
-			<form action="/serve" method="get">
-				<input type="hidden" name="blob-key" value="<%=image.GetBlobKey().getKeyString() %>">
-				<input type="submit" value="View image" />
-			</form>
-		</div>
+		<li>
+			<a class="thumb" name="<%= image.GetSubject() %>" href="<%= image.GetServingUrl() + "=s400" %>" title="<%= image.GetSubject() %>">
+				<img src="<%= image.GetServingUrl() + "=s200" %>" title="<%= image.GetSubject() %>" />
+			</a>
+			<div class="caption">
+				<div class="download">
+					<a href="/serve?blob-key=<%=image.GetBlobKey().getKeyString()%>"> Download </a>
+				</div>
+				<p> <%=image.GetComment() %> </p>
+			</div>
+		</li>
 	<%
 	}
 	}
 	%>
+	</div>
+	</div>
+	<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				// We only want these styles applied when javascript is enabled
+				$('div.navigation').css({'width' : '300px', 'float' : 'left'});
+				$('div.content').css('display', 'block');
+
+				// Initially set opacity on thumbs and add
+				// additional styling for hover effect on thumbs
+				var onMouseOutOpacity = 0.67;
+				$('#thumbs ul.thumbs li').opacityrollover({
+					mouseOutOpacity:   onMouseOutOpacity,
+					mouseOverOpacity:  1.0,
+					fadeSpeed:         'fast',
+					exemptionSelector: '.selected'
+				});
+				
+				// Initialize Advanced Galleriffic Gallery
+				var gallery = $('#thumbs').galleriffic({
+					delay:                     2500,
+					numThumbs:                 15,
+					preloadAhead:              10,
+					enableTopPager:            true,
+					enableBottomPager:         true,
+					maxPagesToShow:            7,
+					imageContainerSel:         '#slideshow',
+					controlsContainerSel:      '#controls',
+					captionContainerSel:       '#caption',
+					loadingContainerSel:       '#loading',
+					renderSSControls:          true,
+					renderNavControls:         true,
+					playLinkText:              'Play Slideshow',
+					pauseLinkText:             'Pause Slideshow',
+					prevLinkText:              '&lsaquo; Previous Photo',
+					nextLinkText:              'Next Photo &rsaquo;',
+					nextPageLinkText:          'Next &rsaquo;',
+					prevPageLinkText:          '&lsaquo; Prev',
+					enableHistory:             false,
+					autoStart:                 false,
+					syncTransitions:           true,
+					defaultTransitionDuration: 900,
+					onSlideChange:             function(prevIndex, nextIndex) {
+						// 'this' refers to the gallery, which is an extension of $('#thumbs')
+						this.find('ul.thumbs').children()
+							.eq(prevIndex).fadeTo('fast', onMouseOutOpacity).end()
+							.eq(nextIndex).fadeTo('fast', 1.0);
+					},
+					onPageTransitionOut:       function(callback) {
+						this.fadeTo('fast', 0.0, callback);
+					},
+					onPageTransitionIn:        function() {
+						this.fadeTo('fast', 1.0);
+					}
+				});
+			});
+		</script>
+
 	</body>
 </html>
