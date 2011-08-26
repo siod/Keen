@@ -7,16 +7,6 @@
   
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>keen.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/keen/greet</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>Upload</servlet-name>
     <servlet-class>keen.server.Upload</servlet-class>
   </servlet>
@@ -39,7 +29,7 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Keen.html</welcome-file>
+    <welcome-file>Keen.jsp</welcome-file>
   </welcome-file-list>
 
 </web-app>
