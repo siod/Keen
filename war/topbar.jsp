@@ -42,3 +42,9 @@
 		</div> <!-- /fill -->
 	</div> <!-- /topbar -->
 </div> <!-- topbar-wrapper -->
+<div id="masthead">
+	<div class="inner">
+		<div class="container">
+		</div>
+	</div>
+</div>

@@ -26,7 +26,7 @@
 <br />
 <form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
 	<p>Author: <input type="text" name="author"> </p>
-	<p>Subject: <input type="text" name="subject"> </p>
+	<p>Subject: <input type="text" name="title"> </p>
 	<p>Comment: <input type="text" name="comment"> </p>
 	<p>Tags: <input type="text" name="tag"> </p>
 	<p>Filetype: <select name="filetype">

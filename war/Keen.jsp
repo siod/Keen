@@ -10,9 +10,8 @@
 	
 	</head>
 
-	<body onLoad="prettyPrint();">
+	<body>
 		<jsp:include page="/topbar.jsp"/>
-   		
 		<div class="container">
 			<p>
 			Put landing screen here that tells about the vault and prompts to login.

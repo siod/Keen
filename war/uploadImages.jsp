@@ -20,7 +20,7 @@
 
 	</head>
 
-	<body onLoad="prettyPrint();">
+	<body>
 		<jsp:include page="/topbar.jsp"/>
 	
 		<div class="container">
@@ -31,15 +31,15 @@
 			 
 			<form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
 				<div class="clearfix">
-					<label for="">Author</label>
+					<label for="">Artist</label>
 					<div class="input">
-						<input type="text" name="author" class="xlarge" size="30"> 
+						<input type="text" name="artist" class="xlarge" size="30"> 
 					</div>
 				</div>
 				<div class="clearfix">
-					<label for="">Subject</label>
+					<label for="">Title</label>
 					<div class="input">
-						<input type="text" name="subject" class="xlarge"> 
+						<input type="text" name="title" class="xlarge"> 
 					</div>
 				</div>
 				<div class="clearfix">
@@ -49,9 +49,9 @@
 					</div>
 				</div>
 				<div class="clearfix">
-					<label for="">Tags</label>
+					<label for="">Tags (Use ";" to seperate)</label>
 					<div class="input">
-						<input type="text" name="tag" class="xlarge"> 
+						<input type="text" name="tags" class="xlarge"> 
 					</div>
 				</div>
 				<div class="clearfix">
@@ -72,7 +72,7 @@
 				</div>
 				
 				<div class="actions">
-					<button type="submit" class="btn primary">Upload</button>&nbsp;<button type="reset" class="btn">Cancel</button>
+					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
 				</div>
 			</form>
 		</div>

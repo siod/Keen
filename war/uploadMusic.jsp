@@ -20,7 +20,7 @@
 
 	</head>
 
-	<body onLoad="prettyPrint();">
+	<body>
 		<jsp:include page="/topbar.jsp"/>
 	
 		<div class="container">

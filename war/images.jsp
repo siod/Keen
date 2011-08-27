@@ -1,19 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.Entity" %>
-<%@ page import="com.google.appengine.api.datastore.Query" %>
-<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
-<%@ page import="com.google.appengine.api.datastore.Key" %>
-<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
-
+<%@ page import="com.googlecode.objectify.*" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="keen.server.ImageAdaptor" %>
+<%@ page import="keen.shared.Image" %>
+<%@ page import="keen.shared.DAO" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobKey" %>
-
+<%@ page import="com.google.appengine.api.images.ImagesService" %>
+<%@ page import="com.google.appengine.api.images.ImagesServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.Text" %>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -49,15 +45,11 @@
 		<%
 			UserService us = UserServiceFactory.getUserService();
 			User fred = us.getCurrentUser();
+			ImagesService is = ImagesServiceFactory.getImagesService();
+			DAO dao = new DAO();
 			
-			DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
-			
-			Query query = new Query("image");
-			query.addFilter("user", Query.FilterOperator.EQUAL, fred);
-			query.addSort("date",Query.SortDirection.DESCENDING);
-			
-			List<Entity> images = dataStore.prepare(query).asList(FetchOptions.Builder.withLimit(500));
-			if (images.isEmpty()) {
+			Query<Image> query = dao.ofy().query(Image.class).filter("owner",fred.getUserId()).order("date");
+			if (!(query.count() > 0)) {
 		%>
 		<p>No Images to view</p>
 		<%
@@ -77,18 +69,17 @@
 	<ul class="thumbs noscript">
 		
 		<%
-	for (Entity ent : images) {
-		ImageAdaptor image = new ImageAdaptor(ent);
+	for (Image img : query) {
 		%>
 		<li>
-			<a class="thumb" name="<%= image.GetSubject() %>" href="<%= image.GetServingUrl() + "=s400" %>" title="<%= image.GetSubject() %>">
-				<img src="<%= image.GetServingUrl() + "=s200" %>" title="<%= image.GetSubject() %>" />
+			<a class="thumb" name="<%= img.title %>" href="<%= is.getServingUrl(img.data) + "=s400" %>" title="<%= img.title %>">
+				<img src="<%= is.getServingUrl(img.data) + "=s200" %>" title="<%= img.title %>" />
 			</a>
 			<div class="caption">
 				<div class="download">
-					<a href="/serve?blob-key=<%=image.GetBlobKey().getKeyString()%>"> Download </a>
+					<a href="/serve?blob-key=<%=img.data.getKeyString()%>"> Download </a>
 				</div>
-				<p> <%=image.GetComment() %> </p>
+				<p> <%=img.comment %> </p>
 			</div>
 		</li>
 	<%

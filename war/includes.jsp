@@ -1,10 +1,7 @@
-    <!-- Le styles -->
-    <link href="css/Bootstrap.css" rel="stylesheet">
-    <link href="css/docs.css" rel="stylesheet">
-    <link href="css/prettify.css" rel="stylesheet">
-
-    <!-- Le javascript -->
-    <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-    <script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>
-    <script src="js/prettify.js"></script>
-    <script src="js/application.js"></script>
+    <!-- styles -->
+    <link href="css/bootstrap-1.1.1.css" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <!-- javascript -->
+	<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAB8PNp8HuNGpFGcySTVEkahTqutWqS_Bs0B9PHFr9BQLdDzUdVRQ6kfIwxT-88HFtQiICnfLzRoiGtQ"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="js/jquery.tablesorter.js"></script>
