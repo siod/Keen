@@ -40,11 +40,10 @@
     	<h1>Images <small>Woot!</small></h1>
  	</div>
 	<a href="/uploadImages.jsp">Upload Images</a>
-	<br/><br/><br/>
-	
 		<%
 			UserService us = UserServiceFactory.getUserService();
 			User fred = us.getCurrentUser();
+			if (fred != null) {
 			ImagesService is = ImagesServiceFactory.getImagesService();
 			DAO dao = new DAO();
 			
@@ -84,6 +83,11 @@
 		</li>
 	<%
 	}
+	}
+	} else {
+	%>
+	<p> Please sign in</p>
+	<%
 	}
 	%>
 	</ul>
