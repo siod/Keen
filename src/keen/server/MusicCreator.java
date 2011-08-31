@@ -1,6 +1,7 @@
 package keen.server;
 
 import java.util.List;
+import java.lang.*;
 import java.util.Date;
 
 import com.google.appengine.api.users.User;
@@ -20,13 +21,16 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import com.google.appengine.api.blobstore.BlobKey;
 
+//TODO Implement as Creator
 public class MusicCreator extends baseCreator {
+	static enum FILETYPE { MP3, M4A, MP4, WMA }
+	Entity musicDetails;
 
 	public MusicCreator(User user) {
 		super(user,"music");
 	}
 
-	/*
+	
 	public void AddTag(String tag) {
 		musicDetails.setProperty("tag",tag);
 	}
@@ -35,20 +39,30 @@ public class MusicCreator extends baseCreator {
 
 	}
 
-	*/
+	
 	public void AddGenre(String genre) {
-		baseDetails.setProperty("genre",genre);
+		musicDetails.setProperty("genre",genre);
 	}
 
 	public void AddAlbum(String album) {
-		baseDetails.setProperty("album",album);
+		musicDetails.setProperty("album",album);
 	}
 
 	public void AddLength(String length) {
-		baseDetails.setProperty("length",length);
+		musicDetails.setProperty("length",length);
+	}
+	
+	public void AddTrackNum(int trackNum) {
+		
+		musicDetails.setProperty("trackNum", trackNum);
+	}
+	
+	public void AddDiscNum(int discNum) {
+		
+		musicDetails.setProperty("discNum", discNum);
 	}
 
-	/*
+	
 	public void AddFileType(String fileType) {
 		musicDetails.setProperty("filetype",fileType);
 	}
@@ -73,7 +87,7 @@ public class MusicCreator extends baseCreator {
 	public void AddBlobKey(BlobKey blobKey) {
 		musicDetails.setProperty("blobkey",blobKey);
 	}
-	*/
+	
 	//TODO rename to getEntity
 	public Entity getMusicEntity() {
 		return baseDetails;
