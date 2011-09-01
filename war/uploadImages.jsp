@@ -30,6 +30,7 @@
  			 </div>
 			 
 			<form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="content" value="image" />
 				<div class="clearfix">
 					<label for="">Artist</label>
 					<div class="input">

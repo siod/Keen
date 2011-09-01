@@ -43,6 +43,7 @@ public class Upload extends HttpServlet {
 			uploadVideo(req,res);
 
 		} else {
+			log.info("invalid content type");
 
 		}
 		/*
@@ -73,7 +74,7 @@ public class Upload extends HttpServlet {
 	private void uploadMusic(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
 		BlobKey[] blobKeys = new BlobKey[2];
-		blobKeys[DATA] = blobs.get("myfile");
+		blobKeys[DATA] = blobs.get("myFile");
 		blobKeys[ART]  = blobs.get("art");
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();
@@ -92,9 +93,10 @@ public class Upload extends HttpServlet {
 
 	private void uploadImage(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
-		BlobKey blobKey = blobs.get("myfile");
+		BlobKey blobKey = blobs.get("myFile");
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();
+		log.info("User : " + fred);
 		if (blobKey == null || fred == null) {
 			res.sendRedirect("/");
 			return;
