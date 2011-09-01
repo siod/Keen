@@ -1,4 +1,4 @@
-
+// DO NOT USE THIS CLASS
 package keen.server;
 
 import com.google.appengine.api.users.User;
