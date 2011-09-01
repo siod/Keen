@@ -30,19 +30,20 @@ public class Video {
 
 	}
 
-	public Video(String owner,String title,
+	public Video(String owner,String title, int length, 
 			List<String>actors,String director,
-			BlobKey data,BlobKey boxArt,
+			BlobKey data,//BlobKey boxArt,
 			Rating rating, String filetype,
 			Text comment) {
 		this.owner = owner;
 		this.title = title;
+		this.length = length;
 		this.actors = new ArrayList<String>();
 		for(String s: actors)
 			this.actors.add(s);
 		this.director = director;
 		this.data = data;
-		this.boxArt = boxArt;
+		// this.boxArt = boxArt;
 		this.rating = rating;
 		this.filetype = filetype;
 		this.comment = comment;
