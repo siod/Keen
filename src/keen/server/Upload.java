@@ -44,7 +44,7 @@ public class Upload extends HttpServlet {
 
 		} else {
 			log.info("invalid content type");
-
+			res.sendRedirect("/");
 		}
 		/*
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
@@ -76,6 +76,9 @@ public class Upload extends HttpServlet {
 		BlobKey[] blobKeys = new BlobKey[2];
 		blobKeys[DATA] = blobs.get("myFile");
 		blobKeys[ART]  = blobs.get("art");
+		if (blobKeys[ART] == null)
+			log.info("art is null");
+
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();
 		if (blobKeys[DATA] == null || fred == null) {
@@ -182,13 +185,15 @@ public class Upload extends HttpServlet {
 
 		String genre = req.getParameter("genre");
 		
-		log.info("BlobKey : " + blobKey.toString());
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[DATA].toString());
 		
 		Rating rating = parseRating(req.getParameter("rating"));
 
 		String[] tags = parseTags(req.getParameter("tags"));
 
-		log.info("Tag : " + tags);
+		for ( String t : tags) {
+			log.info("Tag : " + t);
+		}
 		Text comment = null;
 		if (req.getParameter("comment")!=null) {
 			comment = new Text(req.getParameter("comment"));

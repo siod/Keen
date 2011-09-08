@@ -39,7 +39,7 @@
 	<div class="page-header">
     	<h1>Images <small>Woot!</small></h1>
  	</div>
-	<a href="/uploadImages.jsp">Upload Images</a>
+	<a href="/upload.jsp#image">Upload Images</a>
 		<%
 			UserService us = UserServiceFactory.getUserService();
 			User fred = us.getCurrentUser();
@@ -71,8 +71,8 @@
 	for (Image img : query) {
 		%>
 		<li>
-			<a class="thumb" name="<%= img.title %>" href="<%= is.getServingUrl(img.data) + "=s400" %>" title="<%= img.title %>">
-				<img src="<%= is.getServingUrl(img.data) + "=s200" %>" title="<%= img.title %>" />
+			<a class="thumb" name="<%= img.title %>" href="<%= is.getServingUrl(img.data,400,false) %>" title="<%= img.title %>">
+				<img src="<%= is.getServingUrl(img.data,200,false)%>" title="<%= img.title %>" />
 			</a>
 			<div class="caption">
 				<div class="download">

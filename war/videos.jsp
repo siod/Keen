@@ -29,7 +29,7 @@
     			<h1>Videos <small>Huzzah!</small></h1>
  			</div>
 			 
-			 <a href="/uploadVideos.jsp">Upload Videos</a>
+			 <a href="/upload.jsp#video">Upload Videos</a>
 		</div>
 	</body>
 <html>
