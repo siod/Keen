@@ -17,10 +17,11 @@
     <meta name="author" content="">
 
     <jsp:include page="/includes.jsp"/>
+	<script type="text/javascript" src="js/keen.js"></script>
 
 	</head>
 
-	<body>
+	<body onload="checkType()">
 		<jsp:include page="/topbar.jsp"/>
 	
 		<div class="container">
@@ -29,12 +30,11 @@
 			User fred = us.getCurrentUser();
 			if (fred != null) {
 			%>
-			<div id="image"><br /><br /></div>
-			<div class="page-header">
+			<div id="image-header" class="page-header">
     			<h1>Upload Images <small>Input the details then hit Upload!</small></h1>
  			 </div>
 
-			<form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+			<form id="image" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="image" />
 				<div class="clearfix">
 					<label for="">Artist</label>
@@ -81,11 +81,10 @@
 					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
 				</div>
 			</form>
-			<div id="music"><br /><br /></div>
-			<div class="page-header">
+			<div id="music-header" class="page-header">
     			<h1>Upload Music <small>Input the details then hit Upload!</small></h1>
  			 </div>
-			<form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+			<form id="music" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="music" />
 				<div class="clearfix">
 					<label for="">Artist</label>
@@ -145,11 +144,10 @@
 					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
 				</div>
 			</form>
-			<div id="video"><br /><br /></div>
-			<div class="page-header">
+			<div id="video-header" class="page-header">
     			<h1>Upload Video <small>Input the details then hit Upload!</small></h1>
  			 </div>
-			<form action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+			<form id="video" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="music" />
 				<div class="clearfix">
 					<label for="">Artist</label>

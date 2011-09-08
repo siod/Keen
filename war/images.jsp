@@ -39,7 +39,7 @@
 	<div class="page-header">
     	<h1>Images <small>Woot!</small></h1>
  	</div>
-	<a href="/upload.jsp#image">Upload Images</a>
+	<a href="/upload.jsp?image=1">Upload Images</a>
 		<%
 			UserService us = UserServiceFactory.getUserService();
 			User fred = us.getCurrentUser();

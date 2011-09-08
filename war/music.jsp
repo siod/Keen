@@ -44,20 +44,14 @@
 	<body>
 		<jsp:include page="/topbar.jsp"/>
 	
-		<div class="container">
+		<div class="container-fluid">
 		
-			<div class="page-header">
-    			<h1>Music <small>Yay!</small></h1>
- 			</div>
-			 
-			 <%
+		<div class="sidebar" style="width:420px;padding-right:30px">
+			<%
 	 		UserService us = UserServiceFactory.getUserService();
 			User fred = us.getCurrentUser();
 			if (fred != null) {
 			DAO dao = new DAO();
-			%>
-			<a href="/upload.jsp#music">Upload Music</a>
-			<%
 			
 			Query<Music> query = dao.ofy().query(Music.class).filter("owner",fred.getUserId());
 			if (!(query.count() > 0)) {
@@ -106,25 +100,56 @@
                                 </div>
                         </div>
                 </div>	
+			</div>
+			<div class="content" style="margin-left:440px">
+				<div class="page-header">
+				<h1>Music <small>Yay!</small></h1>
+				</div>
+				<a href="/upload.jsp?music=1">Upload Music</a>
+				<table class="zebra-striped" id="musicTable">
+					<thead>
+						<tr>
+							<th class="header">SongName</th>
+							<th class="blue header">Artist</th>
+							<th class="green header">Genre</th>
+							<th class="red header">Track Number</th>
+							<th class="red header">Disc Number</th>
+							<th class="blue header">Tags</th>
+							<th class="header">Download</th>
+						</tr>
+					</thead>
 			<%
 				for (Music music : query) {
+				String temp = "";
+				for (String tag : music.tags)
+					temp += tag + ";";
 				%>
-				<p> Music file  <%= music.songName %> <br />
-				<% HOPETHISWORKS = "/serve?blob-key=" + music.data.getKeyString();%>
+				<tr>
+					<td> <%=music.songName%></td>
+					<td> <%=music.artist%> </td>
+					<td> <%=music.genre%> </td>
+					<td> <%=music.trackNum%> </td>
+					<td> <%=music.discNum%> </td>
+					<td> <%=temp%> </td>
+					<td> <a href="/serve?blob-key=<%=music.data.getKeyString()%>">Download</a> </td>
+				</tr>
+
 				<script type="text/javascript">
 					function hi() {
-						return "<%= HOPETHISWORKS %>";
+						return "<%= "/serve?blob-key=" + music.data.getKeyString() %>";
 					}
 				</script>
-				<a href="/serve?blob-key=<%=music.data.getKeyString()%>">Download</a>
-				</p>
 				<%
 				}
+				%>
+			</table>
+			<%
 			}
 		}
 		%>
 	
 
+		</div>
 		</div>
 	</body>
 <html>

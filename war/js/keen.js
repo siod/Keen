@@ -6,36 +6,23 @@ function getURLParameter(name) {
 
 
 function checkType() {
-	if (getUrlParam("image") ==1) {
+	if (getURLParameter("image") ==1) {
 		$("#music").hide();
-		$("#music-header").click(function() {
-			$("#music").show(20);
-		});
 		$("#video").hide();
-		$("#video-header").click(function() {
-			$("#video").show(20);
-		});
-
-	} else if (getUrlParam("music") == 1) {
+	} else if (getURLParameter("music") == 1) {
 		$("#image").hide();
-		$("#image-header").click(function() {
-			$("#image").show(20);
-		});
 		$("#video").hide();
-		$("#video-header").click(function() {
-			$("#video").show(20);
-		});
-
-	} else {
-		//video
+	} else if (getURLParameter("video") == 1) {
 		$("#image").hide();
-		$("#image-header").click(function() {
-			$("#image").show(20);
-		});
 		$("#music").hide();
-		$("#music-header").click(function() {
-			$("#music").show(20);
+	}
+	$.each(["#image","#music","#video"],function(index,value) {
+		$(value+ "-header").click(function() {
+			if ($(value).is(":hidden"))
+				$(value).show(20);
+			else
+				$(value).hide();
 		});
+	});
 
 	}
-}
