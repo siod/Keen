@@ -33,8 +33,9 @@
 			<div id="image-header" class="page-header">
     			<h1>Upload Images <small>Input the details then hit Upload!</small></h1>
  			 </div>
+			<%String uploadUrl = blobServ.createUploadUrl("/upload");%>
 
-			<form id="image" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+			<form id="image" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="image" />
 				<div class="clearfix">
 					<label for="">Artist</label>
@@ -51,7 +52,7 @@
 				<div class="clearfix">
 					<label for="">Comment</label>
 					<div class="input">
-						<input type="text" name="comment" class="xlarge"> 
+						<textarea class="xxlarge" name="comment"></textarea>
 					</div>
 				</div>
 				<div class="clearfix">
@@ -61,12 +62,19 @@
 					</div>
 				</div>
 				<div class="clearfix">
-					<label for="">Filetype</label>
+					<label for="">Rating</label>
 					<div class="input">
-						<select name="filetype">
-							<option value="JPG"> JPG </option>
-							<option value="PNG"> PNG </option>
-							<option value="GIF"> GIF </option>
+						<select name="rating">
+							<option value="1"> 1 </option>
+							<option value="2"> 2 </option>
+							<option value="3"> 3 </option>
+							<option value="4"> 4 </option>
+							<option value="5"> 5 </option>
+							<option value="6"> 6 </option>
+							<option value="7"> 7 </option>
+							<option value="8"> 8 </option>
+							<option value="9"> 9 </option>
+							<option value="10"> 10 </option>
 						</select> 
 					</div>
 				</div>
@@ -84,7 +92,7 @@
 			<div id="music-header" class="page-header">
     			<h1>Upload Music <small>Input the details then hit Upload!</small></h1>
  			 </div>
-			<form id="music" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+			<form id="music" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="music" />
 				<div class="clearfix">
 					<label for="">Artist</label>
@@ -101,7 +109,7 @@
 				<div class="clearfix">
 					<label for="">Comment</label>
 					<div class="input">
-						<input type="text" name="comment" class="xlarge"> 
+						<textarea class="xxlarge" name="comment"></textarea>
 					</div>
 				</div>
 				<div class="clearfix">
@@ -135,9 +143,32 @@
 					</div>
 				</div>
 				<div class="clearfix">
+					<label for="">Genre</label>
+					<div class="input">
+						<input type="text" name="genre" class="xlarge"> 
+					</div>
+				</div>
+				<div class="clearfix">
 					<label for="">Length</label>
 					<div class="input">
 						<input type="text" name="length" class="xlarge"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Rating</label>
+					<div class="input">
+						<select name="Rating">
+							<option value="1"> 1 </option>
+							<option value="2"> 2 </option>
+							<option value="3"> 3 </option>
+							<option value="4"> 4 </option>
+							<option value="5"> 5 </option>
+							<option value="6"> 6 </option>
+							<option value="7"> 7 </option>
+							<option value="8"> 8 </option>
+							<option value="9"> 9 </option>
+							<option value="10"> 10 </option>
+						</select> 
 					</div>
 				</div>
 				<div class="actions">
@@ -147,14 +178,8 @@
 			<div id="video-header" class="page-header">
     			<h1>Upload Video <small>Input the details then hit Upload!</small></h1>
  			 </div>
-			<form id="video" action="<%= blobServ.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="content" value="music" />
-				<div class="clearfix">
-					<label for="">Artist</label>
-					<div class="input">
-						<input type="text" name="artist" class="xlarge" size="30"> 
-					</div>
-				</div>
+			<form id="video" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="content" value="video" />
 				<div class="clearfix">
 					<label for="">Title</label>
 					<div class="input">
@@ -162,9 +187,21 @@
 					</div>
 				</div>
 				<div class="clearfix">
+					<label for="">Director</label>
+					<div class="input">
+						<input type="text" name="director" class="xlarge"> 
+					</div>
+				</div>
+				<div class="clearfix">
 					<label for="">Comment</label>
 					<div class="input">
-						<input type="text" name="comment" class="xlarge"> 
+						<textarea class="xxlarge" name="comment"></textarea>
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Actors</label>
+					<div class="input">
+						<textarea class="xxlarge" name="actors"></textarea>
 					</div>
 				</div>
 				<div class="clearfix">
@@ -177,6 +214,35 @@
 					<label for="">File to Store</label>
 					<div class="input">
 						<input type="file" name="myFile" class="input-file"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Box Art</label>
+					<div class="input">
+						<input type="file" name="art" class="input-file"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Length</label>
+					<div class="input">
+						<input type="text" name="length" class="xlarge"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Rating</label>
+					<div class="input">
+						<select name="Rating">
+							<option value="1"> 1 </option>
+							<option value="2"> 2 </option>
+							<option value="3"> 3 </option>
+							<option value="4"> 4 </option>
+							<option value="5"> 5 </option>
+							<option value="6"> 6 </option>
+							<option value="7"> 7 </option>
+							<option value="8"> 8 </option>
+							<option value="9"> 9 </option>
+							<option value="10"> 10 </option>
+						</select> 
 					</div>
 				</div>
 				<div class="actions">

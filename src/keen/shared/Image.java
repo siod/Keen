@@ -25,7 +25,6 @@ public class Image {
 	public List<String> tags = new ArrayList<String>();
 	@NotSaved(IfDefault.class) public Text comment = null;
 	public Date date;
-	String filetype;
 
 
 	private Image() {
@@ -41,7 +40,6 @@ public class Image {
 		this.artist = artist;
 		this.data = data;
 		this.rating = rating;
-		//this.tags = new ArrayList<String>();
 		if (tags != null) {
 			for( String s : tags) {
 				this.tags.add(s);

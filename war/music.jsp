@@ -12,7 +12,6 @@
 <%@ page import="com.google.appengine.api.datastore.Text" %>
 <%
 	BlobstoreService blobServ = BlobstoreServiceFactory.getBlobstoreService();
-	String HOPETHISWORKS = "Has too";
 	final int ART = 1;
 %>
 

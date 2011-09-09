@@ -68,7 +68,25 @@ public class Upload extends HttpServlet {
 	}
 
 	private void uploadVideo(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
+		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
+		BlobKey[] blobKeys = new BlobKey[2];
+		blobKeys[DATA] = blobs.get("myFile");
+		blobKeys[ART]  = blobs.get("art");
+		if (blobKeys[ART] == null)
+			log.info("art is null");
 
+		UserService us = UserServiceFactory.getUserService();
+		User fred = us.getCurrentUser();
+		if (blobKeys[DATA] == null || fred == null) {
+			res.sendRedirect("/");
+			return;
+		}
+		log.info("User : " + fred);
+		DAO oby = new DAO();
+		Video video = createVideo(req,blobKeys,fred);
+		oby.ofy().put(video);
+		
+		res.sendRedirect("/videos.jsp");
 	}
 
 	private void uploadMusic(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
@@ -90,7 +108,8 @@ public class Upload extends HttpServlet {
 		Music music = createMusic(req,blobKeys,fred);
 		oby.ofy().put(music);
 		
-		res.sendRedirect("/serve?blob-key=" + blobKeys[DATA].getKeyString());
+		res.sendRedirect("/music.jsp");
+		//res.sendRedirect("/serve?blob-key=" + blobKeys[DATA].getKeyString());
 
 	}
 
@@ -109,7 +128,8 @@ public class Upload extends HttpServlet {
 		Image image = createImage(req,blobKey,fred);
 		oby.ofy().put(image);
 		
-		res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
+		res.sendRedirect("/images.jsp");
+		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
 
 	}
 
@@ -205,6 +225,37 @@ public class Upload extends HttpServlet {
 		Music music = new Music(owner,length,songName,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
 
 		return music;
+	}
+
+	public Video createVideo(HttpServletRequest req,BlobKey[] blobKey,User fred) {
+
+		String owner = fred.getUserId();
+		
+		int length = tryParseInt(req.getParameter("length"));
+		
+		String title = req.getParameter("title");
+		String director = req.getParameter("director");
+
+		log.info("director : " + director);
+
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[DATA].toString());
+		
+		Rating rating = parseRating(req.getParameter("rating"));
+
+		String[] tags = parseTags(req.getParameter("tags"));
+		String[] actors = parseTags(req.getParameter("actors"));
+
+		for ( String t : tags) {
+			log.info("Tag : " + t);
+		}
+		Text comment = null;
+		if (req.getParameter("comment")!=null) {
+			comment = new Text(req.getParameter("comment"));
+		}
+		
+		Video video = new Video(owner,length,title,director,actors,tags,blobKey[DATA],blobKey[ART],rating,comment);
+
+		return video;
 	}
 
 }
