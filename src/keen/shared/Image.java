@@ -25,6 +25,7 @@ public class Image {
 	public List<String> tags = new ArrayList<String>();
 	@NotSaved(IfDefault.class) public Text comment = null;
 	public Date date;
+	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	private Image() {
@@ -47,6 +48,7 @@ public class Image {
 		}
 		this.comment = comment;
 		this.date = date;
+		toDelete = false;
 
 
 	}

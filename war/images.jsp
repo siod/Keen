@@ -69,6 +69,8 @@
 		
 		<%
 	for (Image img : query) {
+	if (img.toDelete == true)
+			continue;
 		%>
 		<li>
 			<a class="thumb" name="<%= img.title %>" href="<%= is.getServingUrl(img.data,400,false) %>" title="<%= img.title %>">

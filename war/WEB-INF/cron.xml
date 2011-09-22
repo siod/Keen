@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+	<url>/cron/gc</url>
+    <description>Clean all deleted items</description>
+    <schedule>every 1 hour</schedule>
+  </cron>
+</cronentries>

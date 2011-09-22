@@ -149,6 +149,8 @@
 			<%
 				int i = 0;
 				for (Music music : query) {
+				if (music.toDelete == true)
+					continue;
 				String temp = "";
 				for (String tag : music.tags)
 					temp += tag + ";";
@@ -167,8 +169,14 @@
 						myPlaylist.add( {
 							title:"<%=music.songName%>",
 							artist:"<%=music.artist%>",
-							mp3:"<%= "/serve?blob-key=" + music.data.getKeyString() %>",
+							mp3:"<%= "/serve?blob-key=" + music.data.getKeyString() %>"
+							<%
+							if (music.albumArt != null) {
+							%>,
 							poster: "<%= is.getServingUrl(music.albumArt,640,false) %>",
+							<%
+							}
+							%>
 						});
 					});
 				</script>

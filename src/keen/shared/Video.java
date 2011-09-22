@@ -24,6 +24,7 @@ public class Video {
 	@Unindexed public BlobKey boxArt;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	@NotSaved(IfDefault.class) public Text comment = null;
+	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	private Video() {
@@ -49,6 +50,7 @@ public class Video {
 		this.boxArt = boxArt;
 		this.rating = rating;
 		this.comment = comment;
+		toDelete = false;
 	}
 
 

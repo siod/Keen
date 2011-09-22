@@ -26,6 +26,7 @@ public class Music {
 	public int trackNum;
 	public int discNum;
 	@NotSaved(IfDefault.class) public Text comment = null;
+	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	public Music() {
@@ -52,6 +53,8 @@ public class Music {
 		this.trackNum = trackNum;
 		this.discNum = discNum;
 		this.comment = comment;
+		toDelete = false;
+
 	}
 				
 	
