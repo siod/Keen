@@ -18,7 +18,8 @@ import java.util.Date;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -88,6 +89,20 @@ public class Upload extends HttpServlet {
 		
 		res.sendRedirect("/videos.jsp");
 	}
+	private boolean checkArtValid(BlobKey blob) {
+		if (blob == null)
+			return true;
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blob);
+		if (info.getSize() != 0)
+			return true;
+
+		log.info("invalid blob, datastore bug?");
+		blobServ.delete(blob);
+		return false;
+	}
+
+
 
 	private void uploadMusic(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
@@ -96,6 +111,8 @@ public class Upload extends HttpServlet {
 		blobKeys[ART]  = blobs.get("art");
 		if (blobKeys[ART] == null)
 			log.info("art is null");
+		if (!checkArtValid(blobKeys[ART]))
+			blobKeys[ART] = null;
 
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();
