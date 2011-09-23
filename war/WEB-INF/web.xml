@@ -26,6 +26,15 @@
     <url-pattern>/serve</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>GCMark</servlet-name>
+    <servlet-class>keen.server.GCMark</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>GCMark</servlet-name>
+	<url-pattern>/user/mark</url-pattern>
+  </servlet-mapping>
   
   <servlet>
     <servlet-name>GCServ</servlet-name>
@@ -45,6 +54,7 @@
             <url-pattern>/videos.jsp</url-pattern>
             <url-pattern>/upload.jsp</url-pattern>
             <url-pattern>/serve</url-pattern>
+			<url-pattern>/user/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>*</role-name>

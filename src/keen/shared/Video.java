@@ -1,6 +1,5 @@
 package keen.shared;
 
-import javax.persistence.Id;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,10 +10,9 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-public class Video {
+@Subclass
+public class Video extends Media {
 
-	@Id Long id;
-	public String owner;
 	@Unindexed public int length;
 	public String title;
 	public String director;
@@ -24,7 +22,6 @@ public class Video {
 	@Unindexed public BlobKey boxArt;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	@NotSaved(IfDefault.class) public Text comment = null;
-	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	private Video() {

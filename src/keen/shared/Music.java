@@ -11,10 +11,9 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-public class Music {
+@Subclass
+public class Music extends Media {
 
-	@Id Long id;
-	public String owner;
 	public int length;
 	public String songName;
 	public String artist;
@@ -26,7 +25,6 @@ public class Music {
 	public int trackNum;
 	public int discNum;
 	@NotSaved(IfDefault.class) public Text comment = null;
-	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	public Music() {

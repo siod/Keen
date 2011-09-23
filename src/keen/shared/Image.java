@@ -1,7 +1,6 @@
 package keen.shared;
 
 
-import javax.persistence.Id;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -14,10 +13,9 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-public class Image {
+@Subclass
+public class Image extends Media {
 
-	@Id Long id;
-	public String owner;
 	public String title;
 	public String artist;
 	@Unindexed public BlobKey data;
@@ -25,7 +23,6 @@ public class Image {
 	public List<String> tags = new ArrayList<String>();
 	@NotSaved(IfDefault.class) public Text comment = null;
 	public Date date;
-	@Unindexed(IfFalse.class) public boolean toDelete;
 
 
 	private Image() {
@@ -52,8 +49,5 @@ public class Image {
 
 
 	}
-
-
-
 
 }

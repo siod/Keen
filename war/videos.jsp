@@ -152,6 +152,8 @@
 			<%
 				int i = 0;
 				for (Video video : query) {
+				if (video.toDelete == true)
+					continue;
 				String tags = "";
 				String actors = "";
 				for (String tag : video.tags)

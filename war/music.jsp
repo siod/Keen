@@ -143,13 +143,14 @@
 							<th class="red header">Disc Number</th>
 							<th class="blue header">Tags</th>
 							<th class="header">Download</th>
+							<th class="Delete">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
 			<%
 				int i = 0;
 				for (Music music : query) {
-				if (music.toDelete == true)
+				if (music.toDelete)
 					continue;
 				String temp = "";
 				for (String tag : music.tags)
@@ -162,7 +163,8 @@
 					<td> <%=music.trackNum%> </td>
 					<td> <%=music.discNum%> </td>
 					<td> <%=temp%> </td>
-					<td> <a href="/serve?blob-key=<%=music.data.getKeyString()%>">Download</a> </td>
+					<td> <a class="btn info" href="/serve?blob-key=<%=music.data.getKeyString()%>">Download</a> </td>
+					<td> <button class="btn danger" onclick="deleteData(<%=music.id%>,'#<%=i%>');">Delete</button> </td>
 				</tr>
 				<script type="text/javascript">
 					$("#<%=i%>").click(function() {

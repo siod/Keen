@@ -25,4 +25,8 @@ function checkType() {
 		});
 	});
 
-	}
+}
+
+function deleteData(oId,divId) {
+	$.post('/user/mark',{ id: oId }).success($(divId).remove());
+}
