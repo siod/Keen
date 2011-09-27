@@ -28,13 +28,11 @@
 					<ul class="dropdown-menu">
 						<li> Placeholder</li>
 						<li class="divider"></li>
-						<li>
-						<a href="<%= us.createLogoutURL(request.getRequestURI())%>">Sign Out</a>
-						</li>
+						<li> <a href="<%= us.createLogoutURL(request.getRequestURI())%>">Sign Out</a> </li>
 					</ul>
 					</li>
 					<% } else { %>
-					<li>Sign In<li>
+					<li><a href="<%= us.createLoginURL(request.getRequestURI())%>">Sign In</a><li>
 					<% } %>
 					<!-- End Log On -->
 				</ul>

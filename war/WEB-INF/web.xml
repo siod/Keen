@@ -59,6 +59,7 @@
 	<security-constraint>
         <web-resource-collection>
             <url-pattern>/images.jsp</url-pattern>
+            <url-pattern>/image</url-pattern>
             <url-pattern>/music.jsp</url-pattern>
             <url-pattern>/music</url-pattern>
             <url-pattern>/videos.jsp</url-pattern>
