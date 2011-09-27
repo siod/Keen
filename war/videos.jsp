@@ -33,6 +33,7 @@
 	<script type="text/javascript">
 	var myPlaylist;
 	$(document).ready(function(){
+			page = "video";
 
 	myPlaylist = new jPlayerPlaylist({
 		jPlayer: "#jquery_jplayer_1",

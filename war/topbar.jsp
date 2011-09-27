@@ -24,7 +24,7 @@
 						if (fred != null) {
 					%>
 					<li class="dropdown" data-dropdown="dropdown">
-					<a class="dropdown-toggle"><%=fred.getNickname() %></a>
+					<a href="#" class="dropdown-toggle"><%=fred.getNickname() %></a>
 					<ul class="dropdown-menu">
 						<li> Placeholder</li>
 						<li class="divider"></li>
