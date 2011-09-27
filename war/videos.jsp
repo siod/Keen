@@ -12,6 +12,10 @@
 <%@ page import="com.google.appengine.api.datastore.Text" %>
 <%
 	BlobstoreService blobServ = BlobstoreServiceFactory.getBlobstoreService();
+	UserService us = UserServiceFactory.getUserService();
+	ImagesService is = ImagesServiceFactory.getImagesService();
+	User fred = us.getCurrentUser();
+	DAO dao = new DAO();
 %>
 
 <!DOCTYPE html>
@@ -60,20 +64,6 @@
 		<div class="container-fluid">
 		
 		<div class="sidebar" style="width:645px;padding-right:30px">
-			<%
-	 		UserService us = UserServiceFactory.getUserService();
-			ImagesService is = ImagesServiceFactory.getImagesService();
-			User fred = us.getCurrentUser();
-			if (fred != null) {
-			DAO dao = new DAO();
-			
-			Query<Video> query = dao.ofy().query(Video.class).filter("owner",fred.getUserId());
-			if (!(query.count() > 0)) {
-		%>
-		<p>No Videos to view</p>
-		<%
-			} else {
-			%>
 		<div id="jp_container_1" class="jp-video jp-video-360p">
 			<div class="jp-type-playlist">
 				<div id="jquery_jplayer_1" class="jp-jplayer"></div>
@@ -134,30 +124,31 @@
 		</div>
 			<!-- info -->
 			<div class="content" style="margin-left:680px">
+			<%
+			Query<Video> query = dao.ofy().query(Video.class).filter("owner",fred.getUserId());
+			%>
 				<div class="page-header">
-				<h1>Video <small>Yay!</small></h1>
+				<h1>Video <small><a href="/upload.jsp?video=1">Upload Video</a></small></h1>
 				</div>
-				<a href="/upload.jsp?video=1">Upload Video</a>
-				<table class="zebra-striped" id="VideoTable">
+				<table class="zebra-striped" id="videoTable">
 					<thead>
 						<tr> 
 							<th class="header">Title</th>
 							<th class="blue header">Director</th>
 							<th class="green header">Actors</th>
 							<th class="red header">Tags</th>
-							<th class="header">Download</th>
+							<th class="blue header">Download</th>
+							<th class="red header">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
 			<%
 				int i = 0;
 				for (Video video : query) {
-				if (video.toDelete == true)
-					continue;
 				String tags = "";
 				String actors = "";
 				for (String tag : video.tags)
-					tags += tag + ",";
+					tags += "<span class=\"label success\">" + tag + "</span> ";
 				for (String actor : video.actors)
 					actors += actor + ",";
 				%>
@@ -184,12 +175,6 @@
 				%>
 			</tbody>
 			</table>
-			<%
-			}
-		}
-		%>
-	
-
 		</div>
 		</div>
 	</body>

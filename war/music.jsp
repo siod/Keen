@@ -12,6 +12,10 @@
 <%@ page import="com.google.appengine.api.datastore.Text" %>
 <%
 	BlobstoreService blobServ = BlobstoreServiceFactory.getBlobstoreService();
+	UserService us = UserServiceFactory.getUserService();
+	ImagesService is = ImagesServiceFactory.getImagesService();
+	User fred = us.getCurrentUser();
+	DAO dao = new DAO();
 	final int ART = 1;
 %>
 
@@ -56,20 +60,6 @@
 		<div class="container-fluid">
 		
 		<div class="sidebar" style="width:480px;padding-right:30px">
-			<%
-	 		UserService us = UserServiceFactory.getUserService();
-			ImagesService is = ImagesServiceFactory.getImagesService();
-			User fred = us.getCurrentUser();
-			if (fred != null) {
-			DAO dao = new DAO();
-			
-			Query<Music> query = dao.ofy().query(Music.class).filter("owner",fred.getUserId());
-			if (!(query.count() > 0)) {
-		%>
-		<p>No Music to view</p>
-		<%
-			} else {
-			%>
 		<div id="jp_container_1" class="jp-video jp-video-270p">
 			<div class="jp-type-playlist">
 				<div id="jquery_jplayer_1" class="jp-jplayer"></div>
@@ -130,10 +120,12 @@
 		</div>
 			<!-- info -->
 			<div class="content" style="margin-left:550px">
+			<%
+			Query<Music> query = dao.ofy().query(Music.class).filter("owner",fred.getUserId());
+			%>
 				<div class="page-header">
-				<h1>Music <small>Yay!</small></h1>
+				<h1>Music <small><a href="/upload.jsp?music=1">Upload Music</a></small></h1>
 				</div>
-				<a href="/upload.jsp?music=1">Upload Music</a>
 				<table class="zebra-striped" id="musicTable">
 					<thead>
 						<tr> 
@@ -142,9 +134,9 @@
 							<th class="green header">Genre</th>
 							<th class="red header">Track Number</th>
 							<th class="red header">Disc Number</th>
-							<th class="blue header">Tags</th>
-							<th class="header">Download</th>
-							<th class="Delete">Delete</th>
+							<th class="green header">Tags</th>
+							<th class="blue header">Download</th>
+							<th class="red header">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -153,7 +145,7 @@
 				for (Music music : query) {
 				String temp = "";
 				for (String tag : music.tags)
-					temp += tag + ";";
+					temp += "<span class=\"label success\">" + tag + "</span> ";
 				%>
 				<tr id="<%=i%>">
 					<td> <%=music.songName%></td>
@@ -187,12 +179,6 @@
 				%>
 			</tbody>
 			</table>
-			<%
-			}
-		}
-		%>
-	
-
 		</div>
 		</div>
 	</body>

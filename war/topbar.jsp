@@ -7,35 +7,35 @@
 		<div class="fill">
 			<div class="container">
 				<h3><a href="/Keen.jsp">Keen Media Vault</a></h3>
-				<ul>
+				<ul class="nav">
 					<li><a href="/Keen.jsp">Home</a></li>
 					<li><a href="/music.jsp">Music</a></li>
 					<li><a href="/images.jsp">Images</a></li>
 					<li><a href="/videos.jsp">Videos</a></li>
 				</ul>
-				<form action="">
+				<form class="pull-left" action="">
 					<input type="text" placeholder="Search" />
 				</form>
-				<ul style="padding-left:20px; padding-top:5px; text-align:center;">
-					<!-- Start Log On -->
+				<ul class="nav secondary-nav">
 					<%
 						UserService us = UserServiceFactory.getUserService();
 						User fred = us.getCurrentUser();
 		
 						if (fred != null) {
 					%>
-			
-					Hello, <%= fred.getNickname() %> <br/>(
-					<a href="<%= us.createLogoutURL(request.getRequestURI()) %>">Sign Out</a>.)
-					<%
-						} else {
-					%>
-			
-					Hello!  <br/>(You can
-					<a href="<%= us.createLoginURL(request.getRequestURI()) %>">Sign In</a>.)
-					<%
-						}
-					%>
+					<li class="dropdown" data-dropdown="dropdown">
+					<a class="dropdown-toggle"><%=fred.getNickname() %></a>
+					<ul class="dropdown-menu">
+						<li> Placeholder</li>
+						<li class="divider"></li>
+						<li>
+						<a href="<%= us.createLogoutURL(request.getRequestURI())%>">Sign Out</a>
+						</li>
+					</ul>
+					</li>
+					<% } else { %>
+					<li>Sign In<li>
+					<% } %>
 					<!-- End Log On -->
 				</ul>
 			</div>
