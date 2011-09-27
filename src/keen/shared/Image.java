@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+import javax.persistence.Id;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -13,9 +14,10 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-@Subclass
-public class Image extends Media {
+public class Image {
 
+	@Id public Long id;
+	public String owner;
 	public String title;
 	public String artist;
 	@Unindexed public BlobKey data;
@@ -45,7 +47,6 @@ public class Image extends Media {
 		}
 		this.comment = comment;
 		this.date = date;
-		toDelete = false;
 
 
 	}

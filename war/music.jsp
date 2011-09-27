@@ -30,6 +30,7 @@
 	<script type="text/javascript">
 	var myPlaylist;
 	$(document).ready(function(){
+	page = "music";
 
 	myPlaylist = new jPlayerPlaylist({
 		jPlayer: "#jquery_jplayer_1",
@@ -150,8 +151,6 @@
 			<%
 				int i = 0;
 				for (Music music : query) {
-				if (music.toDelete)
-					continue;
 				String temp = "";
 				for (String tag : music.tags)
 					temp += tag + ";";
@@ -173,9 +172,9 @@
 							artist:"<%=music.artist%>",
 							mp3:"<%= "/serve?blob-key=" + music.data.getKeyString() %>"
 							<%
-							if (music.albumArt != null) {
+							if (music.artData != null) {
 							%>,
-							poster: "<%= is.getServingUrl(music.albumArt,640,false) %>",
+							poster: "<%= is.getServingUrl(music.artData,640,false) %>",
 							<%
 							}
 							%>

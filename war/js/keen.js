@@ -26,7 +26,17 @@ function checkType() {
 	});
 
 }
-
+var page;
 function deleteData(oId,divId) {
-	$.post('/user/mark',{ id: oId }).success($(divId).remove());
+	$.post('/'+page,{ id: oId }).success($(divId).remove());
+	/*
+	$.ajax({
+		type: "DELETE",
+		url: '/'+page,
+		data: { id: oId },
+		success: function() {
+			$(divId).remove()
+		}
+	});
+	*/
 }

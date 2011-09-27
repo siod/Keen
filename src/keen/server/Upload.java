@@ -89,17 +89,18 @@ public class Upload extends HttpServlet {
 		
 		res.sendRedirect("/videos.jsp");
 	}
-	private boolean checkArtValid(BlobKey blob) {
+	// blobstore has being returning incorrect (IE 0 byte) blobs
+	private BlobKey validateBlob(BlobKey blob) {
 		if (blob == null)
-			return true;
+			return null;
 		BlobInfoFactory blobFact = new BlobInfoFactory();
 		BlobInfo info = blobFact.loadBlobInfo(blob);
 		if (info.getSize() != 0)
-			return true;
+			return blob;
 
 		log.info("invalid blob, datastore bug?");
 		blobServ.delete(blob);
-		return false;
+		return null;
 	}
 
 
@@ -111,8 +112,7 @@ public class Upload extends HttpServlet {
 		blobKeys[ART]  = blobs.get("art");
 		if (blobKeys[ART] == null)
 			log.info("art is null");
-		if (!checkArtValid(blobKeys[ART]))
-			blobKeys[ART] = null;
+		blobKeys[ART] = validateBlob(blobKeys[ART]);
 
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();

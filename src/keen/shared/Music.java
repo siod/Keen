@@ -4,6 +4,7 @@ import javax.persistence.Id;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.persistence.Id;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -11,15 +12,16 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-@Subclass
-public class Music extends Media {
+public class Music {
 
+	@Id public Long id;
+	public String owner;
 	public int length;
 	public String songName;
 	public String artist;
 	public String genre;
 	@Unindexed public BlobKey data;
-	@Unindexed public BlobKey albumArt;
+	@Unindexed public BlobKey artData;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	public List<String> tags = new ArrayList<String>();
 	public int trackNum;
@@ -41,7 +43,7 @@ public class Music extends Media {
 		this.artist = artist;
 		this.genre = genre;
 		this.data = data;
-		this.albumArt = albumArt;
+		this.artData = albumArt;
 		this.rating = rating;
 		if (tags != null) {
 			for( String s : tags) {
@@ -51,8 +53,6 @@ public class Music extends Media {
 		this.trackNum = trackNum;
 		this.discNum = discNum;
 		this.comment = comment;
-		toDelete = false;
-
 	}
 				
 	

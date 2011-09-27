@@ -3,6 +3,8 @@ package keen.shared;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.persistence.Id;
+
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -10,16 +12,17 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.condition.*;
 
-@Subclass
-public class Video extends Media {
+public class Video {
 
+	@Id public Long id;
+	public String owner;
 	@Unindexed public int length;
 	public String title;
 	public String director;
 	public List<String> actors = new ArrayList<String>();
 	public List<String> tags = new ArrayList<String>();
 	@Unindexed public BlobKey data;
-	@Unindexed public BlobKey boxArt;
+	@Unindexed public BlobKey artData;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	@NotSaved(IfDefault.class) public Text comment = null;
 
@@ -44,10 +47,9 @@ public class Video extends Media {
 			for( String s : actors)
 			this.actors.add(s);
 		this.data = data;
-		this.boxArt = boxArt;
+		this.artData = boxArt;
 		this.rating = rating;
 		this.comment = comment;
-		toDelete = false;
 	}
 
 
