@@ -17,7 +17,7 @@
 			DAO dao = new DAO();
 %>
 <%
-	Query<Image> query = dao.ofy().query(Image.class).filter("owner",fred.getUserId()).order("date");
+	Query<Image> query = dao.ofy().query(Image.class).filter("owner",fred.getUserId());
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -44,15 +44,19 @@
 				<%
 				int i = 0;
 				for (Image img : query) {
+					String temp = "";
+				for (String tag : img.tags)
+					temp += "<span class=\"label success\">" + tag + "</span> ";
 				%>
 						{
 					id: '<%= img.id%>',
 					title: '<%= img.title %>',
 					data: '<%= is.getServingUrl(img.data) %>',
-					comment: '<%= img.comment.getValue() %>',
+					comment: "<%= img.comment.getValue() %>",
 					artist: '<%= img.artist %>',
 					rating: '<%= img.rating.getRating() %>',
-					date: '<%= img.date.toString() %>'
+					date: '<%= img.date.toString() %>',
+					tags: '<%= temp %>'
 					<% if (i != query.count() - 1) { %>
 					},
 					<% } else { %>
@@ -65,10 +69,40 @@
 				<% } %>
 		</script>
 		<script type="text/javascript">
+			function addAllImages() {
+				for (x in imageList) {
+					addNewThumbnail(imageList[x]);
+					addNewTableRow(imageList[x]);
+				}
+				$("a[rel='galleryThumb']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
+				$("a[rel='gallery']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
+				$("#imageTable").tablesorter({ sortList: [[1.0]] });
+			}
+
+			function addNewThumbnail(image) {
+				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.data 
+											+ '" title="' + image.title 
+											+ '"><img class="thumbnail" src="' 
+											+ image.data + '=s210" alt=""></a></li>'
+											);
+			}
+			function addNewTableRow(image) {
+				$('#imageTable').append('<tr id="' + image.id + '"> <td>' +image.title 
+						+ '</td><td> ' + image.artist + ' </td> <td> ' + image.rating 
+						+ '</td> <td> ' + image.date + '</td> <td> ' + image.comment 
+						+ ' </td> <td> ' + image.tags 
+						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.data 
+						+ '" title="' + image.title 
+						+ '">View</a> </td> <td> <a class="btn info" href="/serve?blob-key=' + image.data 
+						+ '">Download</a> </td> <td> <button class="btn danger" onclick="deleteData(' + image.id + ',\'#' + image.id + '\');">Delete</button> </td> </tr>');
+
+			}
+		</script>
+		<script type="text/javascript">
 			$(document).ready(function(){
 					page = "image";
-					$("a[rel='gallery']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
-					$("#imageTable").tablesorter({ sortList: [[1.0]] });
+					addAllImages();
+
 				});
 		</script>
  	<head>
@@ -81,11 +115,11 @@
     	<h1>Images <small><a href="/upload.jsp?image=1">Upload Images</a></small></h1>
  	</div>
 	<ul class="tabs" data-tabs="tabs">
-		<li class="active"><a href="#imageList">List</a></li>
+		<li class="active"><a href="#imageTableDiv">List</a></li>
 		<li><a href="#imageThumbs">Thumbnails</a></li>
 	</ul>
 	<div id="main-content" class="tab-content">
-		<div class="active" id="imageList">
+		<div class="active" id="imageTableDiv">
 			<table class='zebra-striped' id='imageTable'>
 				<thead>
 					<tr> 
@@ -101,32 +135,13 @@
 					</tr>
 				</thead>
 				<tbody>
-		<%
-		int i = 0;
-		for (Image image : query) {
-		String temp = "";
-		for (String tag : image.tags)
-			temp += "<span class=\"label success\">" + tag + "</span> ";
-		%>
-		<tr id="<%=i%>">
-					<td> <%=image.title%></td>
-					<td> <%=image.artist%> </td>
-					<td> <%=image.rating.getRating()%></td>
-					<td> <%=image.date.toString()%></td>
-					<td> <%=image.comment.getValue()%> </td>
-					<td> <%=temp%> </td>
-					<td> <a class="btn info" rel="gallery" href="<%= is.getServingUrl(image.data)%>" title="<%=image.title%>">View</a> </td>
-					<td> <a class="btn info" href="/serve?blob-key=<%=image.data.getKeyString()%>">Download</a> </td>
-					<td> <button class="btn danger" onclick="deleteData(<%=image.id%>,'#<%=i%>');">Delete</button> </td>
-		</tr>
-		<% 
-		i++;
-		}
-	   	%>
-		</tbody>
-		</table>
+				</tbody>
+			</table>
 		</div>
-		<div id="imageThumbs"> This is a different test.</div>
+		<div id="imageThumbs">
+			<ul id="imageThumbsList" class="media-grid">
+			</ul>
+		</div>
 	</div>
 	</div>
 	</body>
