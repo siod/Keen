@@ -24,6 +24,8 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import keen.shared.*;
+import keen.metaParsing.Music.*;
+import keen.metaParsing.*;
 
 public class Upload extends HttpServlet {
 	public static final Logger log = Logger.getLogger(Upload.class.getName());
@@ -75,6 +77,7 @@ public class Upload extends HttpServlet {
 		blobKeys[ART]  = blobs.get("art");
 		if (blobKeys[ART] == null)
 			log.info("art is null");
+		blobKeys[ART] = validateBlob(blobKeys[ART]);
 
 		UserService us = UserServiceFactory.getUserService();
 		User fred = us.getCurrentUser();
@@ -211,6 +214,11 @@ public class Upload extends HttpServlet {
 
 	public Music createMusic(HttpServletRequest req,BlobKey[] blobKey,User fred) {
 
+		//TODO
+		//Testing only
+		TestMetaParsing(blobKey[DATA]);
+		// ------------
+
 		String owner = fred.getUserId();
 		
 		int length = tryParseInt(req.getParameter("length"));
@@ -222,7 +230,7 @@ public class Upload extends HttpServlet {
 
 		String genre = req.getParameter("genre");
 		
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[DATA].toString());
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[ART].toString());
 		
 		Rating rating = parseRating(req.getParameter("rating"));
 
@@ -255,7 +263,7 @@ public class Upload extends HttpServlet {
 
 		log.info("director : " + director);
 
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[DATA].toString());
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[ART].toString());
 		
 		Rating rating = parseRating(req.getParameter("rating"));
 
@@ -273,6 +281,53 @@ public class Upload extends HttpServlet {
 		Video video = new Video(owner,length,title,director,actors,tags,blobKey[DATA],blobKey[ART],rating,comment);
 
 		return video;
+	}
+
+	//TODO
+	// This method must be disabled before deployment
+	private void TestMetaParsing(BlobKey blobKey) {
+
+		try {
+			Mp3ID3v2 test = new Mp3ID3v2(new ChainedBlobstoreInputStream(blobKey));
+			try {
+				log.info("Album :" + test.getAlbum());
+			} catch (Exception e) {
+				log.info("Album is null");
+			}
+			try {
+				log.info("SongName :" + test.getSongName());
+			} catch (Exception e) {
+				log.info("SongName is null");
+			}
+			try {
+				log.info("Artist :" + test.getArtist());
+			} catch (Exception e) {
+				log.info("Artist is null");
+			}
+			try {
+				log.info("Track Number :" + test.getTrackNum());
+			} catch (Exception e) {
+				log.info("Track is null");
+			}
+			try {
+				log.info("Disc Number :" + test.getDiscNum());
+			} catch (Exception e) {
+				log.info("Disc is null");
+			}
+			try {
+				log.info("Rating :" + test.getRating());
+			} catch (Exception e) {
+				log.info("Rating is null");
+			}
+			try {
+				log.info("Genre :" + test.getGenre());
+			} catch (Exception e) {
+				log.info("Rating is null");
+			}
+		} catch (Exception e) {
+			log.info(":( " + e.toString());
+		}
+
 	}
 
 }
