@@ -17,16 +17,20 @@ public class Mp3ID3v2 implements MusicParser {
 	public Mp3ID3v2(ChainedBlobstoreInputStream tag) throws IOException {
 		// check if id3
 		byte[] header = new byte[10];
-		if (tag.read(header) != 10)
+		if (tag.read(header) != 10) {
 			err = true;
+			return;
+		}
 
 		// check for "ID3" and version number
-		if (!(header[0] == (byte)(49)
-			&& header[1] == (byte)(44)
-			&& header[2] == (byte)(33)
-			&& header[3] == (byte)(03)
-			&& header[4] == (byte)(00)))
+		if (!(header[0] == (byte)(0x49)
+			&& header[1] == (byte)(0x44)
+			&& header[2] == (byte)(0x33)
+			&& header[3] == (byte)(0x03)
+			&& header[4] == (byte)(0x00))) {
 			err = true;
+			return;
+		}
 
 		checkFlags(header,5);
 		int tagSize = getSize(header,6);
@@ -101,10 +105,15 @@ public class Mp3ID3v2 implements MusicParser {
 		return !err;
 	}
 
+	// Note all text incoded strings start with a byte to indicate charset
+	// 0x00 = ISO-8859-1
+	// 0x0.1 = Unicode 2.0 these strings also start with a BOM to indicate byte order 
+	// LE? 0xFF 0xFE
+	// BE? 0xFE 0xFF
 
 	public String getAlbum() {
 		try {
-			return new String(attribs.get("TALB"));
+			return new String(attribs.get("TALB"),1,attribs.get("TALB").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -126,7 +135,7 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getSongName() {
 		try {
-			return new String(attribs.get("TIT2"));
+			return new String(attribs.get("TIT2"),1,attribs.get("TIT2").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -135,7 +144,7 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getGenre() {
 		try {
-			return new String(attribs.get("TCON"));
+			return new String(attribs.get("TCON"),1,attribs.get("TCON").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -145,7 +154,7 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getArtist() {
 		try {
-			return new String(attribs.get("TPE1"));
+			return new String(attribs.get("TPE1"),1,attribs.get("TPE1").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -153,7 +162,7 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getTrackNum() {
 		try {
-			return new String(attribs.get("TRCK"));
+			return new String(attribs.get("TRCK"),1,attribs.get("TRCK").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -162,7 +171,7 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getDiscNum() {
 		try {
-			return new String(attribs.get("TPA"));
+			return new String(attribs.get("TPA"),1,attribs.get("TPA").length -1);
 		} catch (NullPointerException e) {
 			return "";
 		}

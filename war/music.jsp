@@ -129,11 +129,12 @@
 				<table class="zebra-striped" id="musicTable">
 					<thead>
 						<tr> 
-							<th class="header">SongName</th>
+							<th class="header">Song Name</th>
 							<th class="blue header">Artist</th>
 							<th class="green header">Genre</th>
-							<th class="red header">Track Number</th>
-							<th class="red header">Disc Number</th>
+							<th class="yellow header">Rating</th>
+							<th class="red header">Track</th>
+							<th class="red header">Disc</th>
 							<th class="green header">Tags</th>
 							<th class="blue header">Download</th>
 							<th class="red header">Delete</th>
@@ -151,6 +152,7 @@
 					<td> <%=music.songName%></td>
 					<td> <%=music.artist%> </td>
 					<td> <%=music.genre%> </td>
+					<td> <%=music.rating.getRating()%> </td>
 					<td> <%=music.trackNum%> </td>
 					<td> <%=music.discNum%> </td>
 					<td> <%=temp%> </td>

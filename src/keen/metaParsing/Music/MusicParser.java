@@ -18,6 +18,8 @@ public interface MusicParser {
 
 	public String getDiscNum();
 
+	public int getRating();
+
 	/*
 	public String getLength();
 	*/

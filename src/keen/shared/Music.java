@@ -16,7 +16,6 @@ public class Music {
 
 	@Id public Long id;
 	public String owner;
-	public int length;
 	public String songName;
 	public String artist;
 	public String genre;
@@ -24,8 +23,8 @@ public class Music {
 	@Unindexed public BlobKey artData;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	public List<String> tags = new ArrayList<String>();
-	public int trackNum;
-	public int discNum;
+	public String trackNum;
+	public String discNum;
 	@NotSaved(IfDefault.class) public Text comment = null;
 
 
@@ -33,12 +32,11 @@ public class Music {
 
 	}
 
-	public Music(String owner, int length, String songName, 
+	public Music(String owner, String songName, 
 				String artist, String genre, BlobKey data,
-				BlobKey albumArt, Rating rating, String[] tags,int trackNum,
-				int discNum, Text comment) {
+				BlobKey albumArt, Rating rating, String[] tags,String trackNum,
+				String discNum, Text comment) {
 		this.owner = owner;
-		this.length = length;
 		this.songName = songName;
 		this.artist = artist;
 		this.genre = genre;

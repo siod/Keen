@@ -218,21 +218,43 @@ public class Upload extends HttpServlet {
 		//Testing only
 		TestMetaParsing(blobKey[DATA]);
 		// ------------
+		String songName,artist,genre,trackNum,discNum;
+		Rating rating;
+
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blobKey[DATA]);
+		log.info("Content type = " + info.getContentType());
+		try {
+			MusicParser metaInfo;
+			if ((metaInfo = MusicParserFactory.getInstance().getMusicParser(blobKey[DATA],info.getContentType())) != null) {
+				songName = metaInfo.getSongName();
+				artist = metaInfo.getArtist();
+				genre = metaInfo.getGenre();
+				trackNum = metaInfo.getTrackNum();
+				discNum = metaInfo.getDiscNum();
+				rating = new Rating(metaInfo.getRating()/255 * 10);
+
+			} else {
+				throw new Exception();
+
+			}
+
+		} catch (Exception e) {
+			log.info("Parser exception");
+			songName = req.getParameter("songName");
+			artist = req.getParameter("artist");
+			genre = req.getParameter("genre");
+			rating = parseRating(req.getParameter("rating"));
+			trackNum = req.getParameter("trackNum");
+			discNum = req.getParameter("discNum");
+		}
 
 		String owner = fred.getUserId();
-		
-		int length = tryParseInt(req.getParameter("length"));
-		
-		String songName = req.getParameter("songName");
 
-		String artist = req.getParameter("artist");
 		log.info("Artist : " + artist);
-
-		String genre = req.getParameter("genre");
 		
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[ART].toString());
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + ((blobKey[ART] == null) ? "No art Data" : blobKey[ART].toString()));
 		
-		Rating rating = parseRating(req.getParameter("rating"));
 
 		String[] tags = parseTags(req.getParameter("tags"));
 
@@ -244,10 +266,8 @@ public class Upload extends HttpServlet {
 			comment = new Text(req.getParameter("comment"));
 		}
 		
-		int trackNum = tryParseInt(req.getParameter("trackNum"));
-		int discNum = tryParseInt(req.getParameter("discNum"));
 		
-		Music music = new Music(owner,length,songName,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
+		Music music = new Music(owner,songName,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
 
 		return music;
 	}
@@ -263,7 +283,7 @@ public class Upload extends HttpServlet {
 
 		log.info("director : " + director);
 
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + blobKey[ART].toString());
+		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + ((blobKey[ART] == null) ? "No art Data" : blobKey[ART].toString()));
 		
 		Rating rating = parseRating(req.getParameter("rating"));
 
@@ -285,10 +305,14 @@ public class Upload extends HttpServlet {
 
 	//TODO
 	// This method must be disabled before deployment
-	private void TestMetaParsing(BlobKey blobKey) {
+	private void TestMetaParsing(BlobKey blob) {
+
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blob);
+		log.info("Content type = " + info.getContentType());
 
 		try {
-			Mp3ID3v2 test = new Mp3ID3v2(new ChainedBlobstoreInputStream(blobKey));
+			MusicParser test = MusicParserFactory.getInstance().getMusicParser(blob,info.getContentType());
 			try {
 				log.info("Album :" + test.getAlbum());
 			} catch (Exception e) {
