@@ -36,6 +36,7 @@ public class Upload extends HttpServlet {
 
 
 	public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
+
 		if ( req.getParameter("content").equals("image")) {
 			uploadImage(req,res);
 
@@ -74,6 +75,10 @@ public class Upload extends HttpServlet {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
 		BlobKey[] blobKeys = new BlobKey[2];
 		blobKeys[DATA] = blobs.get("myFile");
+		if (blobKeys[DATA] == null) {
+			res.sendRedirect("/");
+			return;
+		}
 		blobKeys[ART]  = blobs.get("art");
 		if (blobKeys[ART] == null)
 			log.info("art is null");
@@ -112,6 +117,10 @@ public class Upload extends HttpServlet {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
 		BlobKey[] blobKeys = new BlobKey[2];
 		blobKeys[DATA] = blobs.get("myFile");
+		if (blobKeys[DATA] == null) {
+			res.sendRedirect("/");
+			return;
+		}
 		blobKeys[ART]  = blobs.get("art");
 		if (blobKeys[ART] == null)
 			log.info("art is null");

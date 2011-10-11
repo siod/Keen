@@ -94,16 +94,11 @@
  			 </div>
 			<form id="music" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="content" value="music" />
-				<div class="clearfix">
-					<label for="">Artist</label>
+				<div class="clearfix error">
+					<label for="">File to Store</label>
 					<div class="input">
-						<input type="text" name="artist" class="xlarge" size="30"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Title</label>
-					<div class="input">
-						<input type="text" name="songName" class="xlarge"> 
+						<input type="file" name="myFile" class="input-file error"> 
+						<span class="help-inline">Currently Only Mp3's are supported</span>
 					</div>
 				</div>
 				<div class="clearfix">
@@ -118,60 +113,7 @@
 						<input type="text" name="tags" class="xlarge"> 
 					</div>
 				</div>
-				<div class="clearfix">
-					<label for="">File to Store</label>
-					<div class="input">
-						<input type="file" name="myFile" class="input-file"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Album Art</label>
-					<div class="input">
-						<input type="file" name="art" class="input-file"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Track Number</label>
-					<div class="input">
-						<input type="text" name="trackNum" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Disc Number</label>
-					<div class="input">
-						<input type="text" name="discNum" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Genre</label>
-					<div class="input">
-						<input type="text" name="genre" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Length</label>
-					<div class="input">
-						<input type="text" name="length" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Rating</label>
-					<div class="input">
-						<select name="Rating">
-							<option value="1"> 1 </option>
-							<option value="2"> 2 </option>
-							<option value="3"> 3 </option>
-							<option value="4"> 4 </option>
-							<option value="5"> 5 </option>
-							<option value="6"> 6 </option>
-							<option value="7"> 7 </option>
-							<option value="8"> 8 </option>
-							<option value="9"> 9 </option>
-							<option value="10"> 10 </option>
-						</select> 
-					</div>
-				</div>
-				<div class="actions">
+			<div class="actions">
 					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
 				</div>
 			</form>

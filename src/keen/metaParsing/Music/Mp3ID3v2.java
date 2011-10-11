@@ -10,7 +10,9 @@ import java.lang.NullPointerException;
 public class Mp3ID3v2 implements MusicParser {
 
 	private boolean err;
+	private int paddingValue;
 	private int remAttribNum;
+	private int version;
 	private Map<String,byte[]> attribs;
 
 
@@ -23,16 +25,30 @@ public class Mp3ID3v2 implements MusicParser {
 		}
 
 		// check for "ID3" and version number
-		if (!(header[0] == (byte)(0x49)
-			&& header[1] == (byte)(0x44)
-			&& header[2] == (byte)(0x33)
-			&& header[3] == (byte)(0x03)
-			&& header[4] == (byte)(0x00))) {
+		if (!((int)(header[0] & 0xFF) == (int)((0x49) & 0xFF)
+			&& (int)(header[1] & 0xFF) == (int)((0x44) & 0xFF)
+			&& (int)(header[2] & 0xFF) == (int)((0x33) & 0xFF))) {
 			err = true;
 			return;
 		}
 
-		checkFlags(header,5);
+		version = checkVersion(header,3);
+
+		switch (version) {
+
+			case 3:
+				paddingValue = 8;
+				break;
+			case 4:
+				paddingValue = 7;
+
+			default:
+				// error unsupported version
+				err = true;
+				return;
+		}
+
+		checkHeaderFlags(header,5);
 		int tagSize = getSize(header,6);
 		// attributes to parse
 		attribs = new HashMap<String,byte[]>();
@@ -62,12 +78,24 @@ public class Mp3ID3v2 implements MusicParser {
 
 	}
 
-	private void checkFlags(byte[] header, int offset) {
+	private int checkVersion(byte[] header, int offset) {
+		int Majorversion = (int)(header[offset] & 0xFF);
+		// minor version isn't currently used
+		//int MinorVersion = (int)(header[offset + 1] & 0xFF);
+		return Majorversion;
+	}
+	private void checkHeaderFlags(byte[] header, int offset) {
+
+	}
+	private void checkFrameFlags(byte[] header) {
 
 	}
 
 	private int getSize(byte[] header, int offset) {
-		return (((int)(header[offset] & 0xFF) << 21) | ((int)(header[offset + 1] & 0xFF) << 14) | ((int)(header[offset + 2] & 0xFF) << 7) | (int)(header[offset+3] & 0xFF));
+		return (((int)(header[offset] & 0xFF) << 21) 
+				| ((int)(header[offset + 1] & 0xFF) << 14) 
+				| ((int)(header[offset + 2] & 0xFF) << 7) 
+				| (int)(header[offset+3] & 0xFF));
 	}
 
 	private void parseFrame(ChainedBlobstoreInputStream tag) throws IOException {
@@ -76,16 +104,26 @@ public class Mp3ID3v2 implements MusicParser {
 		tag.read(buffer);
 		
 		String frameID = new String(buffer);
+		// Reading padding bytes,
+		// spec requires that there is no padding between frames so it is safe to exit.
+		if (frameID == "") {
+			remAttribNum = 0;
+			return;
+		}
 
 		tag.read(buffer);
 
 		//HACK
 		// this is unsigned. and java has no unsigned int
-		long size = (((int)(buffer[0] & 0xFF) << 24) | ((int)(buffer[1] & 0xFF) << 16) | ((int)(buffer[2] & 0xFF) << 8) | ((int)(buffer[3] & 0xFF)));
+		long size = (((int)(buffer[0] & 0xFF) << paddingValue*3) 
+					| ((int)(buffer[1] & 0xFF) << paddingValue*2) 
+					| ((int)(buffer[2] & 0xFF) << paddingValue) 
+					| ((int)(buffer[3] & 0xFF)));
 
 		// may not use
 		byte[] flags = new byte[2];
 		tag.read(flags);
+		checkFrameFlags(flags);
 		//----- End frame header reading
 
 		if (attribs.containsKey(frameID)) {
@@ -120,16 +158,19 @@ public class Mp3ID3v2 implements MusicParser {
 	}
 
 	public int getRating(){
-		// POPM consits of a null terminated <email string> a rating byte and a optional 
-		// counter bytes
-		int i = 0;
-		byte[] data;
-		if ((data = attribs.get("POPM")) == null)
+		try {
+			// POPM consits of a null terminated <email string> a rating byte and a optional 
+			// counter bytes
+			int i = 0;
+			byte[] data;
+			data = attribs.get("POPM");
+			// don't care about the email string
+			while (data[i++] != 0x00);
+			// return the unsigned counter byte
+			return (int)(data[i] & 0xFF);
+		} catch (NullPointerException e) {
 			return 0;
-		// don't care about the email string
-		while (data[i++] != 0x00);
-		// return the unsigned counter byte
-		return (int)(data[i] & 0xFF);
+		}
 
 	}
 

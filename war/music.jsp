@@ -144,6 +144,7 @@
 			<%
 				int i = 0;
 				for (Music music : query) {
+				try {
 				String temp = "";
 				for (String tag : music.tags)
 					temp += "<span class=\"label success\">" + tag + "</span> ";
@@ -152,7 +153,7 @@
 					<td> <%=music.songName%></td>
 					<td> <%=music.artist%> </td>
 					<td> <%=music.genre%> </td>
-					<td> <%=music.rating.getRating()%> </td>
+					<td> <%=(music.rating != null) ? music.rating.getRating() : 0 %> </td>
 					<td> <%=music.trackNum%> </td>
 					<td> <%=music.discNum%> </td>
 					<td> <%=temp%> </td>
@@ -176,6 +177,9 @@
 					});
 				</script>
 				<%
+				} catch (NullPointerException e) {
+					// do nothing 
+				}
 				i++;
 				}
 				%>
