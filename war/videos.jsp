@@ -52,7 +52,7 @@
 		}
 	});
 
-	$("#videoTable").tablesorter({ sortList: [[1.0]] });
+	$("#videoTable").tablesorter();
 
 	});
 	</script>
@@ -158,7 +158,7 @@
 					<td> <%=video.director%> </td>
 					<td> <%=actors%> </td>
 					<td> <%=tags%> </td>
-					<td> <a class="btn info" href="/serve?blob-key=<%=video.data.getKeyString()%>">Download</a> </td>
+					<td> <a class="btn info" href="<%="/download?filename=" + video.title + "&blob-key=" + video.data.getKeyString()%>">Download</a> </td>
 					<td> <button class="btn danger" onclick="deleteData(<%=video.id%>,'#<%=i%>');">Delete</button> </td>
 				</tr>
 				<script type="text/javascript">

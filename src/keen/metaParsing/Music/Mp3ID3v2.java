@@ -41,6 +41,7 @@ public class Mp3ID3v2 implements MusicParser {
 				break;
 			case 4:
 				paddingValue = 7;
+				break;
 
 			default:
 				// error unsupported version
@@ -151,7 +152,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getAlbum() {
 		try {
-			return new String(attribs.get("TALB"),1,attribs.get("TALB").length -1);
+			byte[] tmp = attribs.get("TALB");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -176,7 +181,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getSongName() {
 		try {
-			return new String(attribs.get("TIT2"),1,attribs.get("TIT2").length -1);
+			byte[] tmp = attribs.get("TIT2");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -185,7 +194,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getGenre() {
 		try {
-			return new String(attribs.get("TCON"),1,attribs.get("TCON").length -1);
+			byte[] tmp = attribs.get("TCON");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -195,7 +208,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getArtist() {
 		try {
-			return new String(attribs.get("TPE1"),1,attribs.get("TPE1").length -1);
+			byte[] tmp = attribs.get("TPE1");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -203,7 +220,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getTrackNum() {
 		try {
-			return new String(attribs.get("TRCK"),1,attribs.get("TRCK").length -1);
+			byte[] tmp = attribs.get("TRCK");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}
@@ -212,7 +233,11 @@ public class Mp3ID3v2 implements MusicParser {
 
 	public String getDiscNum() {
 		try {
-			return new String(attribs.get("TPA"),1,attribs.get("TPA").length -1);
+			byte[] tmp = attribs.get("TPA");
+			int end = 1;
+			if (tmp[tmp.length-1] ==0x00)
+				++end;
+			return new String(tmp,1,tmp.length -end);
 		} catch (NullPointerException e) {
 			return "";
 		}

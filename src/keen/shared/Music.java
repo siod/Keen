@@ -17,6 +17,7 @@ public class Music {
 	@Id public Long id;
 	public String owner;
 	public String songName;
+	public String album;
 	public String artist;
 	public String genre;
 	@Unindexed public BlobKey data;
@@ -32,12 +33,13 @@ public class Music {
 
 	}
 
-	public Music(String owner, String songName, 
+	public Music(String owner, String songName, String album,
 				String artist, String genre, BlobKey data,
 				BlobKey albumArt, Rating rating, String[] tags,String trackNum,
 				String discNum, Text comment) {
 		this.owner = owner;
 		this.songName = songName;
+		this.album = album;
 		this.artist = artist;
 		this.genre = genre;
 		this.data = data;

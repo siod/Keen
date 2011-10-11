@@ -47,7 +47,7 @@
 		supplied: "webmv, ogv, m4v, oga, mp3"
 	});
 
-	$("#musicTable").tablesorter({ sortList: [[1.0]] });
+	$("table#musicTable").tablesorter();
 
 	});
 	</script>
@@ -130,6 +130,7 @@
 					<thead>
 						<tr> 
 							<th class="header">Song Name</th>
+							<th class="red header">Album</th>
 							<th class="blue header">Artist</th>
 							<th class="green header">Genre</th>
 							<th class="yellow header">Rating</th>
@@ -151,13 +152,15 @@
 				%>
 				<tr id="<%=i%>">
 					<td> <%=music.songName%></td>
+					<td> <%=music.album%></td>
 					<td> <%=music.artist%> </td>
 					<td> <%=music.genre%> </td>
 					<td> <%=(music.rating != null) ? music.rating.getRating() : 0 %> </td>
 					<td> <%=music.trackNum%> </td>
 					<td> <%=music.discNum%> </td>
 					<td> <%=temp%> </td>
-					<td> <a class="btn info" href="/serve?blob-key=<%=music.data.getKeyString()%>">Download</a> </td>
+							
+					<td> <a class="btn info" href="<%= "/download?filename=" + music.songName + "&blob-key=" + music.data.getKeyString() %>">Download</a> </td>
 					<td> <button class="btn danger" onclick="deleteData(<%=music.id%>,'#<%=i%>');">Delete</button> </td>
 				</tr>
 				<script type="text/javascript">

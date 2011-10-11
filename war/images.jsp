@@ -51,7 +51,8 @@
 						{
 					id: '<%= img.id%>',
 					title: '<%= img.title %>',
-					data: '<%= is.getServingUrl(img.data) %>',
+					idata: '<%= is.getServingUrl(img.data) %>',
+					ddata: '<%= img.data.getKeyString() %>',
 					comment: "<%= img.comment.getValue() %>",
 					artist: '<%= img.artist %>',
 					rating: '<%= img.rating.getRating() %>',
@@ -76,14 +77,14 @@
 				}
 				$("a[rel='galleryThumb']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
 				$("a[rel='gallery']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
-				$("#imageTable").tablesorter({ sortList: [[1.0]] });
+				$("#imageTable").tablesorter();
 			}
 
 			function addNewThumbnail(image) {
-				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.data 
+				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.idata 
 											+ '" title="' + image.title 
 											+ '"><img class="thumbnail" src="' 
-											+ image.data + '=s210" alt=""></a></li>'
+											+ image.idata + '=s210" alt=""></a></li>'
 											);
 			}
 			function addNewTableRow(image) {
@@ -91,9 +92,9 @@
 						+ '</td><td> ' + image.artist + ' </td> <td> ' + image.rating 
 						+ '</td> <td> ' + image.date + '</td> <td> ' + image.comment 
 						+ ' </td> <td> ' + image.tags 
-						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.data 
+						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.idata 
 						+ '" title="' + image.title 
-						+ '">View</a> </td> <td> <a class="btn info" href="/serve?blob-key=' + image.data 
+						+ '">View</a> </td> <td> <a class="btn info" href="/download?filename=' + image.title + '&blob-key=' + image.ddata 
 						+ '">Download</a> </td> <td> <button class="btn danger" onclick="deleteData(' + image.id + ',\'#' + image.id + '\');">Delete</button> </td> </tr>');
 
 			}

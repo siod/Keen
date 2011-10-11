@@ -225,9 +225,9 @@ public class Upload extends HttpServlet {
 
 		//TODO
 		//Testing only
-		TestMetaParsing(blobKey[DATA]);
+		//TestMetaParsing(blobKey[DATA]);
 		// ------------
-		String songName,artist,genre,trackNum,discNum;
+		String songName,album, artist,genre,trackNum,discNum;
 		Rating rating;
 
 		BlobInfoFactory blobFact = new BlobInfoFactory();
@@ -237,6 +237,7 @@ public class Upload extends HttpServlet {
 			MusicParser metaInfo;
 			if ((metaInfo = MusicParserFactory.getInstance().getMusicParser(blobKey[DATA],info.getContentType())) != null) {
 				songName = metaInfo.getSongName();
+				album = metaInfo.getAlbum();
 				artist = metaInfo.getArtist();
 				genre = metaInfo.getGenre();
 				trackNum = metaInfo.getTrackNum();
@@ -251,6 +252,7 @@ public class Upload extends HttpServlet {
 		} catch (Exception e) {
 			log.info("Parser exception");
 			songName = req.getParameter("songName");
+			album = req.getParameter("album");
 			artist = req.getParameter("artist");
 			genre = req.getParameter("genre");
 			rating = parseRating(req.getParameter("rating"));
@@ -276,7 +278,7 @@ public class Upload extends HttpServlet {
 		}
 		
 		
-		Music music = new Music(owner,songName,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
+		Music music = new Music(owner,songName,album,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
 
 		return music;
 	}
@@ -312,6 +314,7 @@ public class Upload extends HttpServlet {
 		return video;
 	}
 
+	/*
 	//TODO
 	// This method must be disabled before deployment
 	private void TestMetaParsing(BlobKey blob) {
@@ -362,6 +365,7 @@ public class Upload extends HttpServlet {
 		}
 
 	}
+	*/
 
 }
 

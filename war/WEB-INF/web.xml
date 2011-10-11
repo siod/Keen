@@ -25,6 +25,16 @@
     <servlet-name>Serve</servlet-name>
     <url-pattern>/serve</url-pattern>
   </servlet-mapping>
+   
+  <servlet>
+    <servlet-name>Download</servlet-name>
+    <servlet-class>keen.server.Download</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Download</servlet-name>
+    <url-pattern>/download</url-pattern>
+  </servlet-mapping>
   
   <servlet>
     <servlet-name>MusicServlet</servlet-name>
