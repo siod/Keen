@@ -43,8 +43,7 @@
 		playlistOptions: {
 			enableRemoveControls: true
 		},
-		swfPath: "js",
-		supplied: "webmv, ogv, m4v, oga, mp3"
+		supplied: "mp3"
 	});
 
 	$("table#musicTable").tablesorter();

@@ -76,6 +76,7 @@
             <url-pattern>/video</url-pattern>
             <url-pattern>/upload.jsp</url-pattern>
             <url-pattern>/serve</url-pattern>
+            <url-pattern>/download</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>*</role-name>

@@ -43,7 +43,6 @@
 		playlistOptions: {
 			enableRemoveControls: true
 		},
-		swfPath: "js",
 		supplied: "webmv, ogv, m4v",
 		size: {
 			width: "640px",
