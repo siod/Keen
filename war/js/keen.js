@@ -30,3 +30,28 @@ var page;
 function deleteData(oId,divId) {
 	$.post('/'+page,{ id: oId }).success($(divId).remove());
 }
+
+
+function search(event){
+	var searchStr = $('#searchBox').val();
+	//searchStr.replace(/([ !"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g,'\\\\$1');
+	var rStr = new RegExp(searchStr,"i");
+	//var searchStr = document.getElementById('searchBox').value;
+	//$("imageTableDiv").hide();
+	console.log("in search value = " + rStr);
+	for (x in imageList) {
+		if(rStr == "" || 
+		   imageList[x].title.match(rStr) ||
+		   imageList[x].artist.match(rStr) ||
+		   imageList[x].comment.match(rStr) ||
+		   imageList[x].tags.match(rStr)){
+			$('#' + imageList[x].id).show();
+			console.log('showing ' + imageList[x].id);
+			//document.getElementById(imageList[x].id).style.display = '';
+		} else{
+			$('#' + imageList[x].id).hide();
+			console.log('hiding ' + imageList[x].id);
+			//document.getElementById(imageList[x].id).style.display = 'none';
+		}
+	}
+}

@@ -102,12 +102,6 @@
 					</div>
 				</div>
 				<div class="clearfix">
-					<label for="">Comment</label>
-					<div class="input">
-						<textarea class="xxlarge" name="comment"></textarea>
-					</div>
-				</div>
-				<div class="clearfix">
 					<label for="">Tags (Use ";" to seperate)</label>
 					<div class="input">
 						<input type="text" name="tags" class="xlarge"> 

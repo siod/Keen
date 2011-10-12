@@ -13,8 +13,8 @@
 					<li><a href="/images.jsp">Images</a></li>
 					<li><a href="/videos.jsp">Videos</a></li>
 				</ul>
-				<form class="pull-left" action="">
-					<input type="text" placeholder="Search" />
+				<form class="pull-left"  action="">
+					<input type="text" id="searchBox" placeholder="Search" />
 				</form>
 				<ul class="nav secondary-nav">
 					<%

@@ -56,7 +56,7 @@
 					comment: "<%= img.comment.getValue() %>",
 					artist: '<%= img.artist %>',
 					rating: '<%= img.rating.getRating() %>',
-					date: '<%= img.date.toString() %>',
+					date: '<%= img.date.getDay() + " / " + img.date.getMonth() + " / " + (img.date.getYear() - 100) %>',
 					tags: '<%= temp %>'
 					<% if (i != query.count() - 1) { %>
 					},
@@ -101,8 +101,11 @@
 		</script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+
 					page = "image";
 					addAllImages();
+					$('#searchBox').keyup(search);
+					//document.getElementById('searchBox').addEventListener('keyup', search ,false);
 
 				});
 		</script>
