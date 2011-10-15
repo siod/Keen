@@ -14,7 +14,8 @@
 		<jsp:include page="/topbar.jsp"/>
 		<div class="container">
 			<p>
-			Put landing screen here that tells about the vault and prompts to login.
+			Welcome to The Keen Media Vault!
+			Click to the Login link in the top right-hand corner to begin uploading, downloading and editing files.
 			</p>
 		</div>
 		
