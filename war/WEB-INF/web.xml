@@ -68,15 +68,15 @@
   <!-- security stuff -->
 	<security-constraint>
         <web-resource-collection>
-            <url-pattern>images.jsp</url-pattern>
-            <url-pattern>image</url-pattern>
-            <url-pattern>music.jsp</url-pattern>
-            <url-pattern>music</url-pattern>
-            <url-pattern>videos.jsp</url-pattern>
-            <url-pattern>video</url-pattern>
-            <url-pattern>upload.jsp</url-pattern>
-            <url-pattern>serve</url-pattern>
-            <url-pattern>download</url-pattern>
+			<url-pattern>/images.jsp</url-pattern>
+			<url-pattern>/image</url-pattern>
+			<url-pattern>/music.jsp</url-pattern>
+			<url-pattern>/music</url-pattern>
+			<url-pattern>/videos.jsp</url-pattern>
+			<url-pattern>/video</url-pattern>
+			<url-pattern>/upload.jsp</url-pattern>
+			<url-pattern>/serve</url-pattern>
+			<url-pattern>/download</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>*</role-name>

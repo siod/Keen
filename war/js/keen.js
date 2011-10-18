@@ -38,7 +38,7 @@ function search(event){
 	var rStr = new RegExp(searchStr,"i");
 	//var searchStr = document.getElementById('searchBox').value;
 	//$("imageTableDiv").hide();
-	console.log("in search value = " + rStr);
+	//console.log("in search value = " + rStr);
 	for (x in imageList) {
 		if(rStr == "" || 
 		   imageList[x].title.match(rStr) ||
@@ -46,11 +46,11 @@ function search(event){
 		   imageList[x].comment.match(rStr) ||
 		   imageList[x].tags.match(rStr)){
 			$('#' + imageList[x].id).show();
-			console.log('showing ' + imageList[x].id);
+			//console.log('showing ' + imageList[x].id);
 			//document.getElementById(imageList[x].id).style.display = '';
 		} else{
 			$('#' + imageList[x].id).hide();
-			console.log('hiding ' + imageList[x].id);
+			//console.log('hiding ' + imageList[x].id);
 			//document.getElementById(imageList[x].id).style.display = 'none';
 		}
 	}
