@@ -32,6 +32,7 @@
 		<link type="text/css" rel="stylesheet" href="/css/main.css" />
 		<link type="text/css" rel="stylesheet" href="/css/colorbox.css" />
 		<script type="text/javascript" src="/js/bootstrap-tabs.js"> </script>
+		<script type="text/javascript" src="/js/bootstrap-modal.js"> </script>
 		<script type="text/javascript" src="/js/jquery.colorbox.js"> </script>
 		<script type="text/javascript">
 			<%
@@ -45,19 +46,16 @@
 				int i = 0;
 				for (Image img : query) {
 					String temp = "";
-				if (img.tags != null) {
-					for (String tag : img.tags)
-						temp += "<span class=\"label success\">" + tag + "</span> ";
-				}
+				for (String tag : img.tags)
+					temp += "<span class=\"label success\">" + tag + "</span> ";
 				%>
 						{
 					id: '<%= img.id%>',
 					title: '<%= img.title %>',
-					idata: '<%= is.getServingUrl(img.data) %>',
-					ddata: '<%= img.data.getKeyString() %>',
+					data: '<%= img.data.getKeyString() %>',
 					comment: "<%= (img.comment != null) ? img.comment.getValue() : "" %>",
-					rating: '<%= (img.comment != null) ? img.rating.getRating() : "" %>',
-					date: '<%= img.date.getDay() + " / " + img.date.getMonth() + " / " + (img.date.getYear() - 100) %>',
+					rating: '<%= (img.comment != null) ? img.rating.getRating() : ""%>',
+					date: '<%= img.date.toString() %>',
 					tags: '<%= temp %>'
 					<% if (i != query.count() - 1) { %>
 					},
@@ -73,41 +71,90 @@
 		<script type="text/javascript">
 			function addAllImages() {
 				for (x in imageList) {
-					addNewThumbnail(imageList[x]);
-					addNewTableRow(imageList[x]);
+
+						addNewThumbnail(imageList[x]);
+						addNewTableRow(imageList[x]);
+					
 				}
 				$("a[rel='galleryThumb']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
 				$("a[rel='gallery']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
-				$("#imageTable").tablesorter();
-			}
+				$("#imageTable").tablesorter({ sortList: [[1.0]] });
 
+			}
+			
 			function addNewThumbnail(image) {
-				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.idata 
+				
+				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.data 
 											+ '" title="' + image.title 
 											+ '"><img class="thumbnail" src="' 
-											+ image.idata + '=s210" alt=""></a></li>'
+											+ image.data + '=s210" alt=""></a></li>'
 											);
 			}
 			function addNewTableRow(image) {
-				$('#imageTable').append('<tr id="' + image.id + '"> <td>' +image.title 
-						+ '</td><td> ' + image.rating 
+				
+				$('#imageTable tbody').append('<tr id="' + image.id + '"> <td>' +image.title 
+						+ '</td> <td> ' + image.rating 
 						+ '</td> <td> ' + image.date + '</td> <td> ' + image.comment 
 						+ ' </td> <td> ' + image.tags 
-						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.idata 
+						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.data 
 						+ '" title="' + image.title 
-						+ '">View</a> </td> <td> <a class="btn info" href="/download?filename=' + image.title + '&blob-key=' + image.ddata 
-						+ '">Download</a> </td> <td> <button class="btn danger" onclick="deleteData(' + image.id + ',\'#' + image.id + '\');">Delete</button> </td> </tr>');
+						+ '">View</a> </td> <td> <a class="btn info" href="/serve?blob-key=' + image.data 
+						+ '">Download</a> </td> '
+						+ '<td> <input type="checkbox" name="' + image.id + '"/> </td> </tr>');
 
+			}
+			
+			function search(){
+				
+				searchStr = document.getElementById('searchBox').value;
+				console.log("in search");
+				for (x in imageList) {
+					if(searchStr == "" || 
+					   imageList[x].title.match(searchStr)||
+					   imageList[x].comment.match(searchStr) ||
+					   imageList[x].tags.match(searchStr)){
+						document.getElementById(imageList[x].id).style.display = '';
+					} else{
+						document.getElementById(imageList[x].id).style.display = 'none';
+					}
+				}
+			}
+			
+			function doDelete(){
+			matches = $(':checked');
+				var ids = "";
+				for(i = 0; i < matches.length; i++){
+					ids += matches[i].name + "|";
+				}
+				for(i = 0; i < matches.length; i++){
+					$('#' + matches[i].name).remove();
+				}
+				$.post('/'+ page,{action: "delete", id: ids });
+
+			}
+			
+			function doEdit(){
+			console.log("in doEdit");
+				matches = $(':checked');
+				var ids = "";
+				for(i = 0; i < matches.length; i++){
+					ids += matches[i].name + "|";
+				}
+				var title = document.getElementById("title").value;
+				var comment = document.getElementById("comment").value;
+				var tags = document.getElementById("tags").value;
+				var rating = document.getElementById("rating").value;
+				
+				$.post('/'+ page,{action: "edit", id: ids, "title":title, "comment":comment, "tags":tags, "rating":rating });
+					console.log("after post");
+					return false;
 			}
 		</script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-
+					document.getElementById('searchBox').addEventListener('keyup', search ,false);
 					page = "image";
 					addAllImages();
-					$('#searchBox').keyup(search);
-					//document.getElementById('searchBox').addEventListener('keyup', search ,false);
-
 				});
 		</script>
  	<head>
@@ -117,30 +164,88 @@
 	<div id="content" style="height:100%;">
 	
 	<div class="page-header">
-    	<h1>Images <small><a href="/upload.jsp">Upload Images</a></small></h1>
+    	<h1>Images <small><a href="/upload.jsp?image=1">Upload Images</a></small></h1>
  	</div>
 	<ul class="tabs" data-tabs="tabs">
 		<li class="active"><a href="#imageTableDiv">List</a></li>
 		<li><a href="#imageThumbs">Thumbnails</a></li>
 	</ul>
 	<div id="main-content" class="tab-content">
-		<div class="active" id="imageTableDiv">
+
+        <div id="editModal" class="modal hide fade">
+            <div class="modal-header">
+              <a href="#" class="close">&times;</a>
+              <h3>Edit</h3>
+            </div>
+            <div class="modal-body">
+			
+			<form id="image" onSubmit="doEdit();" action="" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="content" value="image" />
+				<div class="clearfix">
+					<label for="">Title</label>
+					<div class="input">
+						<input type="text" id="title" name="title" class="xlarge" placeholder="Unchanged"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Comment</label>
+					<div class="input">
+						<textarea class="xlarge" id="comment" name="comment" placeholder="Unchanged"></textarea>
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Tags (Use ";" to seperate)</label>
+					<div class="input">
+						<input type="text" id="tags" name="tags" class="xlarge" placeholder="Unchanged"> 
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="">Rating</label>
+					<div class="input">
+						<select name="rating" id="rating">
+							<option value="0"> Unchanged </option>
+							<option value="1"> 1 </option>
+							<option value="2"> 2 </option>
+							<option value="3"> 3 </option>
+							<option value="4"> 4 </option>
+							<option value="5"> 5 </option>
+							<option value="6"> 6 </option>
+							<option value="7"> 7 </option>
+							<option value="8"> 8 </option>
+							<option value="9"> 9 </option>
+							<option value="10"> 10 </option>
+						</select> 
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+				<button class="btn primary">Commit</button>
+			</div>
+			</form>
+		</div>
+
+		<button class="btn danger" style="float:right; margin-top:-55px;" onclick="doDelete();">Delete</button>
+		<button class="btn danger" style="float:right; margin-top:-55px; margin-right:80px;" data-controls-modal="editModal" data-backdrop="true" data-keyboard="true">Edit</button>
+			
+		<div class="active" id="imageTableDiv"> 
 			<table class='zebra-striped' id='imageTable'>
 				<thead>
 					<tr> 
 						<th class='header'>Title</th>
 						<th class='red header'>Rating</th>
-						<th class='green header'>Date Taken</th>
+						<th class='green header'>Date Uploaded</th>
 						<th class='yellow header'>Comment</th>
 						<th class='green header'>Tags</th>
 						<th class='blue header'>View</th>
 						<th class='blue header'>Download</th>
-						<th class='red header'>Delete</th>
+						<th class='red header'>Select</th>
 					</tr>
 				</thead>
 				<tbody>
 				</tbody>
 			</table>
+			
+			
 		</div>
 		<div id="imageThumbs">
 			<ul id="imageThumbsList" class="media-grid">
