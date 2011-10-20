@@ -13,7 +13,7 @@
 					<li><a href="/images.jsp">Images</a></li>
 					<li><a href="/videos.jsp">Videos</a></li>
 				</ul>
-				<form class="pull-left"  action="">
+				<form class="pull-left" action="" onSubmit="return false;">
 					<input type="text" id="searchBox" placeholder="Search" />
 				</form>
 				<ul class="nav secondary-nav">
@@ -23,16 +23,20 @@
 		
 						if (fred != null) {
 					%>
+					<script> alert = true; </script>
 					<li class="dropdown" data-dropdown="dropdown">
 					<a href="#" class="dropdown-toggle"><%=fred.getNickname() %></a>
 					<ul class="dropdown-menu">
-						<li> Placeholder</li>
-						<li class="divider"></li>
 						<li> <a href="<%= us.createLogoutURL(request.getRequestURI())%>">Sign Out</a> </li>
 					</ul>
 					</li>
 					<% } else { %>
-					<li><a href="<%= us.createLoginURL(request.getRequestURI())%>">Sign In</a><li>
+					<li id="signIn" data-content="To access all of Keen Media Vault's awesome features you need to sign in.<br/><br/>Click 'Sign In' above to login with your google account and get started!" rel="popover" href="#" data-original-title="Your not signed in!"><a href="<%= us.createLoginURL(request.getRequestURI())%>">Sign In</a><li>
+					<script>
+						$("#signIn").popover({trigger:'manual', placement:'below', offset:5, html:true});
+						$("#signIn").popover('show');
+						alert = false;
+					</script>
 					<% } %>
 					<!-- End Log On -->
 				</ul>
