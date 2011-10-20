@@ -26,7 +26,7 @@
 		<div class="container">
 			<div class="alert-message warning fade in" data-alert="alert" id="alert" style="margin-top:-50px">
 				<a class="close" href="#">&times;</a>
-				<p><strong>Welcome to Keen Media Vault!</strong> &nbsp;&nbsp;&nbsp; ...why are you still here? Click the 'Music', 'Images' or 'Video' links above to start with the cool stuff!</p>
+				<p><strong>Welcome to Keen Media Vault!</strong>...why are you still here? Click the 'Music', 'Images' or 'Video' links above to start with the cool stuff!</p>
 			</div>
 
 			<script> 

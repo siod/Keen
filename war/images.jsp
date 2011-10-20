@@ -32,16 +32,15 @@
 		<link type="text/css" rel="stylesheet" href="/css/main.css" />
 		<link type="text/css" rel="stylesheet" href="/css/colorbox.css" />
 		<script type="text/javascript" src="/js/bootstrap-tabs.js"> </script>
-		<script type="text/javascript" src="/js/bootstrap-modal.js"> </script>
 		<script type="text/javascript" src="/js/jquery.colorbox.js"> </script>
 		<script type="text/javascript">
 			<%
 			if (query.count() == 0) {
 			%>
-			var imageList = [];
+			var List = [];
 			<% } else {
 			%>
-				var imageList = [
+				var List = [
 				<%
 				int i = 0;
 				for (Image img : query) {
@@ -52,10 +51,11 @@
 						{
 					id: '<%= img.id%>',
 					title: '<%= img.title %>',
+					idata: '<%= is.getServingUrl(img.data) %>',
 					data: '<%= img.data.getKeyString() %>',
 					comment: "<%= (img.comment != null) ? img.comment.getValue() : "" %>",
 					rating: '<%= (img.comment != null) ? img.rating.getRating() : ""%>',
-					date: '<%= img.date.toString() %>',
+					date: '<%= img.date.getDate() + "/" + img.date.getMonth() + "/" + img.date.getYear() %>',
 					tags: '<%= temp %>'
 					<% if (i != query.count() - 1) { %>
 					},
@@ -70,24 +70,24 @@
 		</script>
 		<script type="text/javascript">
 			function addAllImages() {
-				for (x in imageList) {
+				for (x in List) {
 
-						addNewThumbnail(imageList[x]);
-						addNewTableRow(imageList[x]);
+						addNewThumbnail(List[x]);
+						addNewTableRow(List[x]);
 					
 				}
 				$("a[rel='galleryThumb']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
 				$("a[rel='gallery']").colorbox({photo:true,slideshow:true, slideshowAuto:false});
-				$("#imageTable").tablesorter({ sortList: [[1.0]] });
+				$("#imageTable").tablesorter();
 
 			}
 			
 			function addNewThumbnail(image) {
 				
-				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.data 
+				$('#imageThumbsList').append('<li><a rel="galleryThumb" href="' + image.idata 
 											+ '" title="' + image.title 
 											+ '"><img class="thumbnail" src="' 
-											+ image.data + '=s210" alt=""></a></li>'
+											+ image.idata + '=s210" alt=""></a></li>'
 											);
 			}
 			function addNewTableRow(image) {
@@ -96,30 +96,22 @@
 						+ '</td> <td> ' + image.rating 
 						+ '</td> <td> ' + image.date + '</td> <td> ' + image.comment 
 						+ ' </td> <td> ' + image.tags 
-						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.data 
+						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.idata 
 						+ '" title="' + image.title 
-						+ '">View</a> </td> <td> <a class="btn info" href="/serve?blob-key=' + image.data 
+						+ '">View</a> </td> <td> <a class="btn info" href="/download?filename=' + image.title + '&blob-key=' + image.data 
 						+ '">Download</a> </td> '
 						+ '<td> <input type="checkbox" name="' + image.id + '"/> </td> </tr>');
 
 			}
 			
-			function search(){
-				
-				searchStr = document.getElementById('searchBox').value;
-				console.log("in search");
-				for (x in imageList) {
-					if(searchStr == "" || 
-					   imageList[x].title.match(searchStr)||
-					   imageList[x].comment.match(searchStr) ||
-					   imageList[x].tags.match(searchStr)){
-						document.getElementById(imageList[x].id).style.display = '';
-					} else{
-						document.getElementById(imageList[x].id).style.display = 'none';
-					}
-				}
+			function searchComparer(searchStr,data) {
+				return (searchStr == "" 
+						|| data.title.match(searchStr) 
+						||  data.comment.match(searchStr) 
+						|| data.tags.match(searchStr)
+						);
 			}
-			
+
 			function doDelete(){
 			matches = $(':checked');
 				var ids = "";
@@ -164,7 +156,7 @@
 	<div id="content" style="height:100%;">
 	
 	<div class="page-header">
-    	<h1>Images <small><a href="/upload.jsp?image=1">Upload Images</a></small></h1>
+    	<h1>Images <small><a href="/upload.jsp">Upload Images</a></small></h1>
  	</div>
 	<ul class="tabs" data-tabs="tabs">
 		<li class="active"><a href="#imageTableDiv">List</a></li>
@@ -233,7 +225,7 @@
 					<tr> 
 						<th class='header'>Title</th>
 						<th class='red header'>Rating</th>
-						<th class='green header'>Date Uploaded</th>
+						<th class='green header'>Date</th>
 						<th class='yellow header'>Comment</th>
 						<th class='green header'>Tags</th>
 						<th class='blue header'>View</th>

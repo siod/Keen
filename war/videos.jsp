@@ -28,7 +28,6 @@
 
     <jsp:include page="/includes.jsp"/>
 	<link type="text/css" href="css/skins/jplayer.blue.monday.css" rel="stylesheet" />
-	<script type="text/javascript" src="/js/bootstrap-modal.js"> </script>
 	<script type="text/javascript" src="/js/jquery.jplayer.min.js"> </script>
 	<script type="text/javascript" src="/js/jplayer.playlist.min.js"></script>
 	<%
@@ -39,10 +38,10 @@
 	<%
 			if (query.count() == 0) {
 			%>
-			var videoList = [];
+			var List = [];
 			<% } else {
 			%>
-				var videoList = [
+				var List = [
 				<%
 				int i = 0;
 				for (Video vid : query) {
@@ -72,21 +71,22 @@
 		</script>
 		<script type="text/javascript">
 			function addAllVideos() {
-				for (x in videoList) {
-
-						addNewTableRow(videoList[x]);
-						
-						$('#'+videoList[x].id).click(function() {
-						myPlaylist.add( {
-							title:videoList[x].title,
-							artist:videoList[x].director,
-							m4v:"/serve?blob-key=" + videoList[x].data,
-						});
-					});
-					
+				for (x in List) {
+					addNewTableRow(List[x]);
+					trClickAdd(List[x]);
 				}
-				$("#videoTable").tablesorter({ sortList: [[1.0]] });
+				$("#videoTable").tablesorter();
 
+			}
+
+			function trClickAdd(data) {
+				$('#'+data.id).click(function() {
+						myPlaylist.add( {
+							title:data.title,
+							artist:data.director,
+							m4v:"/serve?blob-key=" + data.data,
+						});
+				});
 			}
 			
 			function addNewTableRow(video) {
@@ -101,25 +101,17 @@
 											  '<td> <input type="checkbox" name="' + video.id + '"/> </td> </tr>');
 			}
 			
-			function search(){
-				
-				searchStr = document.getElementById('searchBox').value;
-				console.log("in search");
-				for (x in videoList) {
-					if(searchStr == "" || 
-					   videoList[x].title.match(searchStr) ||
-					   videoList[x].director.match(searchStr) ||
-					   videoList[x].actors.match(searchStr) ||
-					   videoList[x].tags.match(searchStr)){
-						document.getElementById(videoList[x].id).style.display = '';
-					} else{
-						document.getElementById(videoList[x].id).style.display = 'none';
-					}
-				}
+			function searchComparer(searchStr,data) {
+				return (searchStr == "" 
+						|| data.title.match(searchStr) 
+						|| data.director.match(searchStr) 
+						|| data.actors.match(searchStr) 
+						|| data.tags.match(searchStr)
+						);
 			}
-			
-	function doDelete(){
-			matches = $(':checked');
+
+			function doDelete(){
+				matches = $(':checked');
 				var ids = "";
 				for(i = 0; i < matches.length; i++){
 					ids += matches[i].name + "|";
@@ -246,7 +238,7 @@
 			<!-- info -->
 			<div class="content" style="margin-left:680px">
 				<div class="page-header">
-				<h1>Video <small><a href="/upload.jsp?video=1">Upload Video</a></small></h1>
+				<h1>Video <small><a href="/upload.jsp">Upload Video</a></small></h1>
 				</div>
 				
 			<div id="editModal" class="modal hide fade">

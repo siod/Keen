@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="js/jquery.fileupload.js"></script>
 	<script type="text/javascript" src="js/jquery.fileupload-ui.js"></script>
 	<link rel="stylesheet" href="css/jquery.fileupload-ui.css">
+	<script type="text/javascript" src="js/bootstrap-alerts.js"> </script>
 
 	</head>
 
@@ -24,10 +25,12 @@
 			<div id="header" class="page-header">
     			<h1>Upload Media <small>Drag and drop media files to add them to Keen</small></h1>
  			</div>
-			<div class="alert-message warning">
+			<div class="alert-message warning" data-alert="alert">
+				<a class="close" href="#">&times;</a>
 				<p>Currently Music only supports mp3's</p>
 			</div>
-			<div class="alert-message warning">
+			<div class="alert-message warning" data-alert="alert">
+				<a class="close" href="#">&times;</a>
 				<p>Currently Video only supports m4v's</p>
 			</div>
 			<div id="fileupload">

@@ -80,17 +80,15 @@ function search(event){
 	//var searchStr = document.getElementById('searchBox').value;
 	//$("imageTableDiv").hide();
 	//console.log("in search value = " + rStr);
-	for (x in imageList) {
-		if(rStr == "" || 
-		   imageList[x].title.match(rStr) ||
-		   imageList[x].artist.match(rStr) ||
-		   imageList[x].comment.match(rStr) ||
-		   imageList[x].tags.match(rStr)){
-			$('#' + imageList[x].id).show();
+	for (x in List) {
+		if (searchComparer(rStr,List[x])) {
+		/*
+		*/
+			$('#' + List[x].id).show();
 			//console.log('showing ' + imageList[x].id);
 			//document.getElementById(imageList[x].id).style.display = '';
 		} else{
-			$('#' + imageList[x].id).hide();
+			$('#' + List[x].id).hide();
 			//console.log('hiding ' + imageList[x].id);
 			//document.getElementById(imageList[x].id).style.display = 'none';
 		}

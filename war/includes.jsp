@@ -7,3 +7,4 @@
     <script type="text/javascript" src="js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="js/keen.js"></script>
     <script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="js/bootstrap-modal.js"></script>

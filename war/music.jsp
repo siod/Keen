@@ -38,10 +38,10 @@
 	<%
 			if (query.count() == 0) {
 			%>
-			var musicList = [];
+			var List = [];
 			<% } else {
 			%>
-				var musicList = [
+				var List = [
 				<%
 				int i = 0;
 				for (Music msc : query) {
@@ -51,7 +51,7 @@
 				%>
 						{
 					id: '<%= msc.id%>',
-					songName: '<%= msc.songName %>',
+					songName: "<%= msc.songName %>",
 					data: '<%= msc.data.getKeyString() %>',
 					album: "<%= msc.album %>",
 					artist: "<%= msc.artist %>",
@@ -73,21 +73,23 @@
 		</script>
 		<script type="text/javascript">
 			function addAllMusics() {
-				for (x in musicList) {
+				for (x in List) {
 
-						addNewTableRow(musicList[x]);
-						
-					$('#'+musicList[x].id).click(function() {
-						myPlaylist.add( {
-							title:musicList[x].songName,
-							artist:musicList[x].artist,
-							mp3:"/serve?blob-key=" + musicList[x].data 
-						});
-					});
-					
+					addNewTableRow(List[x]);
+					trClickAdd(List[x]);
 				}
-				$("#musicTable").tablesorter({ sortList: [[1.0]] });
+				$("#musicTable").tablesorter();
 
+			}
+
+			function trClickAdd(data) {
+				$('#'+data.id).click(function() {
+						myPlaylist.add( {
+							title:data.songName,
+							artist:data.artist,
+							mp3:"/serve?blob-key=" + data.data,
+						});
+				});
 			}
 			
 			function addNewTableRow(music) {
@@ -105,23 +107,21 @@
 											  '">Download</a> </td> '+ 
 											  '<td> <input type="checkbox" name="' + music.id + '"/> </td> </tr>');
 			}
-			
-			function search(){
-				
-				searchStr = document.getElementById('searchBox').value;
-				console.log("in search");
-				for (x in musicList) {
-					if(searchStr == "" || 
-					   musicList[x].songName.match(searchStr) ||
-					   musicList[x].tags.match(searchStr)){
-						document.getElementById(musicList[x].id).style.display = '';
-					} else{
-						document.getElementById(musicList[x].id).style.display = 'none';
-					}
-				}
+
+			function searchComparer(searchStr,data) {
+				return (searchStr == "" 
+						|| data.songName.match(searchStr) 
+						|| data.album.match(searchStr) 
+						|| data.artist.match(searchStr)
+						|| data.genre.match(searchStr) 
+						|| data.track.match(searchStr) 
+						|| data.disk.match(searchStr) 
+						|| data.tags.match(searchStr)
+						);
 			}
-	function doDelete(){
-			matches = $(':checked');
+			
+			function doDelete(){
+				matches = $(':checked');
 				var ids = "";
 				for(i = 0; i < matches.length; i++){
 					ids += matches[i].name + "|";
