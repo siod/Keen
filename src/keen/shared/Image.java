@@ -19,7 +19,6 @@ public class Image {
 	@Id public Long id;
 	public String owner;
 	public String title;
-	public String artist;
 	@Unindexed public BlobKey data;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	public List<String> tags = new ArrayList<String>();
@@ -32,12 +31,11 @@ public class Image {
 	}
 
 	public Image(String owner, String title,
-			String artist,BlobKey data,
+			BlobKey data,
 			Rating rating,String[] tags,
 			Text comment,Date date) {
 		this.owner = owner;
 		this.title = title;
-		this.artist = artist;
 		this.data = data;
 		this.rating = rating;
 		if (tags != null) {

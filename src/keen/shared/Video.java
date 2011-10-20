@@ -16,13 +16,11 @@ public class Video {
 
 	@Id public Long id;
 	public String owner;
-	@Unindexed public int length;
 	public String title;
 	public String director;
 	public List<String> actors = new ArrayList<String>();
 	public List<String> tags = new ArrayList<String>();
 	@Unindexed public BlobKey data;
-	@Unindexed public BlobKey artData;
 	@NotSaved(IfDefault.class) public Rating rating = null;
 	@NotSaved(IfDefault.class) public Text comment = null;
 
@@ -31,14 +29,13 @@ public class Video {
 
 	}
 
-	public Video(String owner,int length,
+	public Video(String owner,
 			String title, String director,
 			String[] actors,String[] tags,
-			BlobKey data, BlobKey boxArt,
+			BlobKey data,
 			Rating rating, Text comment) {
 		this.owner = owner;
 		this.title = title;
-		this.length = length;
 		this.director = director;
 		if (tags != null)
 			for( String s : tags)
@@ -47,7 +44,6 @@ public class Video {
 			for( String s : actors)
 			this.actors.add(s);
 		this.data = data;
-		this.artData = boxArt;
 		this.rating = rating;
 		this.comment = comment;
 	}

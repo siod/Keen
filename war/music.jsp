@@ -58,51 +58,39 @@
 	
 		<div class="container-fluid">
 		
-		<div class="sidebar" style="width:480px;padding-right:30px">
-		<div id="jp_container_1" class="jp-video jp-video-270p">
+		<div class="sidebar" style="width:422px;padding-right:30px">
+		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+
+		<div id="jp_container_1" class="jp-audio">
 			<div class="jp-type-playlist">
-				<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-				<div class="jp-gui">
-					<div class="jp-video-play">
-						<a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
-					</div>
-					<div class="jp-interface">
-						<div class="jp-progress">
-							<div class="jp-seek-bar">
-								<div class="jp-play-bar"></div>
-							</div>
-						</div>
-						<div class="jp-current-time"></div>
-						<div class="jp-duration"></div>
-						<div class="jp-controls-holder">
-							<ul class="jp-controls">
-								<li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
-								<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-								<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-								<li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
-								<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
-								<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-								<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-								<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
-							</ul>
-							<div class="jp-volume-bar">
-								<div class="jp-volume-bar-value"></div>
-							</div>
-							<ul class="jp-toggles">
-								<li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
-								<li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
-								<li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
-								<li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
-								<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
-								<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
-							</ul>
-						</div>
-						<div class="jp-title">
-							<ul>
-								<li></li>
-							</ul>
+				<div class="jp-gui jp-interface">
+					<ul class="jp-controls">
+						<li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
+						<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+						<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+						<li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
+						<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+						<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+						<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+						<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+					</ul>
+					<div class="jp-progress">
+						<div class="jp-seek-bar">
+							<div class="jp-play-bar"></div>
+
 						</div>
 					</div>
+					<div class="jp-volume-bar">
+						<div class="jp-volume-bar-value"></div>
+					</div>
+					<div class="jp-current-time"></div>
+					<div class="jp-duration"></div>
+					<ul class="jp-toggles">
+						<li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
+						<li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
+						<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+						<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+					</ul>
 				</div>
 				<div class="jp-playlist">
 					<ul>
@@ -118,12 +106,12 @@
 		</div>
 		</div>
 			<!-- info -->
-			<div class="content" style="margin-left:550px">
+			<div class="content" style="margin-left:480px">
 			<%
 			Query<Music> query = dao.ofy().query(Music.class).filter("owner",fred.getUserId());
 			%>
 				<div class="page-header">
-				<h1>Music <small><a href="/upload.jsp?music=1">Upload Music</a></small></h1>
+				<h1>Music <small><a href="/upload.jsp">Upload Music</a></small></h1>
 				</div>
 				<table class="zebra-striped" id="musicTable">
 					<thead>
@@ -168,15 +156,8 @@
 							title:"<%=music.songName%>",
 							artist:"<%=music.artist%>",
 							mp3:"<%= "/serve?blob-key=" + music.data.getKeyString() %>"
-							<%
-							if (music.artData != null) {
-							%>,
-							poster: "<%= is.getServingUrl(music.artData,640,false) %>",
-							<%
-							}
-							%>
+							});
 						});
-					});
 				</script>
 				<%
 				} catch (NullPointerException e) {

@@ -26,6 +26,47 @@ function checkType() {
 	});
 
 }
+
+function setupFileUpload() {
+$(function() {
+  /* activate the plugin */
+  //$('#fileupload').fileupload();
+
+  /* generate an App Engine url on each click */
+
+  /*
+  $('input:file', '#fileupload').button().click(function() {
+    $.getJSON('/upload', function (response) {
+      $('#fileupload').fileupload('add',{url: response.url});
+    });
+  });
+*/
+
+  $('#fileupload').fileupload({
+	add: function (e, data) {
+		var url;
+		$.ajax({
+		  url: '/upload',
+		  async: false,
+		  dataType: 'json',
+		  success: function (json) {
+			url = json.url;
+			}
+		});
+		//data.url = $.getJSON('/upload', function (response) {
+		//});
+		var that = this;
+		$('#fileupload form').prop('action', url);
+		data.url = url;
+		//= url.url;
+		/* configure the plugin with the /_ah/upload url */
+		$.blueimpUI.fileupload.prototype.options.add.call(that, e, data);
+	}
+  });
+
+});
+};
+
 var page;
 function deleteData(oId,divId) {
 	$.post('/'+page,{ id: oId }).success($(divId).remove());

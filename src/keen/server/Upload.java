@@ -14,6 +14,7 @@ import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.Rating;
 
 import java.util.Date;
+import java.io.PrintWriter;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -35,68 +36,29 @@ public class Upload extends HttpServlet {
 	public final int ART = 1;
 
 
-	public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
-
-		if ( req.getParameter("content").equals("image")) {
-			uploadImage(req,res);
-
-		} else if ( req.getParameter("content").equals("music")) {
-			uploadMusic(req,res);
-
-		} else if ( req.getParameter("content").equals("video")) {
-			uploadVideo(req,res);
-
-		} else {
-			log.info("invalid content type");
-			res.sendRedirect("/");
-		}
-		/*
-		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
-		BlobKey[] blobKeys = new BlobKey[2];
-		blobKeys[DATA] = blobs.get("myfile");
-		blobKeys[ART]  = blobs.get("art");
-		UserService us = UserServiceFactory.getUserService();
-		User fred = us.getCurrentUser();
-		if (blobKey == null || fred == null) {
-			res.sendRedirect("/");
-			return;
-		} 
-		log.info("User : " + fred);
-		DAO oby = new DAO();
-		Image image = createImage(req,blobKey,fred);
-		oby.ofy().put(image);
-		
-		res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
-		*/
-
+	// return new fileupload url
+	public void doGet(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
+		res.setContentType("application/json");
+		String jsonData = "{ \"url\": \"" + blobServ.createUploadUrl("/upload") + "\" }";
+		PrintWriter out = res.getWriter();
+		out.print(jsonData);
+		out.flush();
 	}
 
-	private void uploadVideo(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
-		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
-		BlobKey[] blobKeys = new BlobKey[2];
-		blobKeys[DATA] = blobs.get("myFile");
-		if (blobKeys[DATA] == null) {
-			res.sendRedirect("/");
-			return;
-		}
-		blobKeys[ART]  = blobs.get("art");
-		if (blobKeys[ART] == null)
-			log.info("art is null");
-		blobKeys[ART] = validateBlob(blobKeys[ART]);
-
-		UserService us = UserServiceFactory.getUserService();
-		User fred = us.getCurrentUser();
-		if (blobKeys[DATA] == null || fred == null) {
-			res.sendRedirect("/");
-			return;
-		}
-		log.info("User : " + fred);
-		DAO oby = new DAO();
-		Video video = createVideo(req,blobKeys,fred);
-		oby.ofy().put(video);
-		
-		res.sendRedirect("/videos.jsp");
+	public void createJSON(BlobKey blob,HttpServletResponse res) throws IOException {
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blob);
+		String jsonData = "[{ \"name\": \"" + info.getFilename() + "\", \"size\": \"" + info.getSize() + "\" }]";
+		PrintWriter out = res.getWriter();
+		out.print(jsonData);
+		out.flush();
 	}
+
+	private void freeBlob(BlobKey blob) {
+		if (blob != null)
+			blobServ.delete(blob);
+	}
+
 	// blobstore has being returning incorrect (IE 0 byte) blobs
 	private BlobKey validateBlob(BlobKey blob) {
 		if (blob == null)
@@ -113,129 +75,110 @@ public class Upload extends HttpServlet {
 
 
 
-	private void uploadMusic(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
+	public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
 		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
-		BlobKey[] blobKeys = new BlobKey[2];
-		blobKeys[DATA] = blobs.get("myFile");
-		if (blobKeys[DATA] == null) {
-			res.sendRedirect("/");
-			return;
-		}
-		blobKeys[ART]  = blobs.get("art");
-		if (blobKeys[ART] == null)
-			log.info("art is null");
-		blobKeys[ART] = validateBlob(blobKeys[ART]);
-
+		BlobKey blob = blobs.get("myFile");
+		blob = validateBlob(blob);
 		UserService us = UserServiceFactory.getUserService();
-		User fred = us.getCurrentUser();
-		if (blobKeys[DATA] == null || fred == null) {
-			res.sendRedirect("/");
+		User user = us.getCurrentUser();
+
+		if (blob == null || user == null) {
+			freeBlob(blob);
+			res.setStatus(400);
 			return;
 		}
-		log.info("User : " + fred);
+
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blob);
+
+		switch (Type.getInstance().parseType(info.getContentType())) {
+			case MUSIC:
+				uploadMusic(req,res,user,blob);
+				break;
+			case IMAGE:
+				uploadImage(req,res,user,blob);
+				break;
+			case VIDEO:
+				uploadVideo(req,res,user,blob);
+				break;
+			default:
+				freeBlob(blob);
+				res.setStatus(400);
+				break;
+		}
+	}
+
+	private void uploadVideo(HttpServletRequest req,
+								HttpServletResponse res,
+								User user,BlobKey blobKey) throws IOException, ServletException {
+		log.info("User : " + user);
 		DAO oby = new DAO();
-		Music music = createMusic(req,blobKeys,fred);
+		Video video = createVideo(req,blobKey,user);
+		oby.ofy().put(video);
+		createJSON(blobKey,res);
+	}
+
+	private void uploadMusic(HttpServletRequest req,
+								HttpServletResponse res,
+								User user,BlobKey blobKey) throws IOException, ServletException {
+		log.info("User : " + user);
+		DAO oby = new DAO();
+		Music music = createMusic(req,blobKey,user);
 		oby.ofy().put(music);
 		
-		res.sendRedirect("/music.jsp");
-		//res.sendRedirect("/serve?blob-key=" + blobKeys[DATA].getKeyString());
+		createJSON(blobKey,res);
 
 	}
 
-	private void uploadImage(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException {
-		Map<String,BlobKey> blobs = blobServ.getUploadedBlobs(req);
-		BlobKey blobKey = blobs.get("myFile");
-		UserService us = UserServiceFactory.getUserService();
-		User fred = us.getCurrentUser();
-		log.info("User : " + fred);
-		if (blobKey == null || fred == null) {
-			res.sendRedirect("/");
-			return;
-		} 
-		log.info("User : " + fred);
+	private void uploadImage(HttpServletRequest req,
+								HttpServletResponse res,
+								User user,BlobKey blobKey) throws IOException, ServletException {
+		log.info("User : " + user);
 		DAO oby = new DAO();
-		Image image = createImage(req,blobKey,fred);
+		Image image = createImage(req,blobKey,user);
 		oby.ofy().put(image);
 		
-		res.sendRedirect("/images.jsp");
-		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
+		createJSON(blobKey,res);
 
 	}
 
 
-	private String[] parseTags(String stags) {
-		if (stags == null)
-			return null;
-		String[] tags = stags.split(";");
-		return tags;
-	}
-
-	private Rating parseRating(String srating) {
-		if (srating == null)
-			return null;
-		try {
-			int r = Integer.parseInt(srating);
-			return new Rating(r);
-		} catch(NumberFormatException e) {
-			log.info("Invalid rating passed, setting to null");
-		}
-		return null;
-	}
-
-	public int tryParseInt(String srating) {
-		try {
-			int r = Integer.parseInt(srating);
-			if ( r > 0)
-				return r;
-
-		} catch(NumberFormatException e) {
-			log.info("Invalid rating passed, setting to 0");
-		}
-			log.info("invalid length");
-			return 0;
-
+	public String getFileName(BlobKey blob) {
+		BlobInfoFactory blobFact = new BlobInfoFactory();
+		BlobInfo info = blobFact.loadBlobInfo(blob);
+		String filename = info.getFilename();
+		int ext = filename.lastIndexOf(".");
+		if (ext == -1)
+			return filename;
+		return filename.substring(0,ext);
 	}
 
 	//Assumed that all paramters are not null
-	public Image createImage(HttpServletRequest req,BlobKey blobKey,User fred) {
+	public Image createImage(HttpServletRequest req,BlobKey blobKey,User user) {
 
-		String owner = fred.getUserId();
-
-		String title = req.getParameter("title");
-
-		String artist = req.getParameter("artist");
-		log.info("Artist : " + artist);
-
-		Rating rating = parseRating(req.getParameter("rating"));
-
-		String[] tags = parseTags(req.getParameter("tags"));
-
-		log.info("Tag : " + tags);
-		Text comment = null;
-		if (req.getParameter("comment")!=null) {
-			comment = new Text(req.getParameter("comment"));
-		}
+		String owner = user.getUserId();
+		String title = getFileName(blobKey);
 		log.info("BlobKey : " + blobKey.toString());
-		Image image = new Image(owner,title,artist,blobKey,rating,tags,comment,new Date());
+		Image image = new Image(owner,title,blobKey,null,null,null,new Date());
 
 		return image;
 	}
 
-	public Music createMusic(HttpServletRequest req,BlobKey[] blobKey,User fred) {
+	public Music createMusic(HttpServletRequest req,BlobKey blobKey,User user) {
 
 		//TODO
 		//Testing only
-		//TestMetaParsing(blobKey[DATA]);
+		//TestMetaParsing(blobKey);
 		// ------------
 		String songName,album, artist,genre,trackNum,discNum;
 		Rating rating;
 
 		BlobInfoFactory blobFact = new BlobInfoFactory();
-		BlobInfo info = blobFact.loadBlobInfo(blobKey[DATA]);
+		BlobInfo info = blobFact.loadBlobInfo(blobKey);
 		log.info("Content type = " + info.getContentType());
 		try {
 			MusicParser metaInfo;
-			if ((metaInfo = MusicParserFactory.getInstance().getMusicParser(blobKey[DATA],info.getContentType())) != null) {
+			if ((metaInfo = MusicParserFactory.getInstance().getMusicParser(blobKey,info.getContentType())) != null) {
 				songName = metaInfo.getSongName();
 				album = metaInfo.getAlbum();
 				artist = metaInfo.getArtist();
@@ -251,65 +194,28 @@ public class Upload extends HttpServlet {
 
 		} catch (Exception e) {
 			log.info("Parser exception");
-			songName = req.getParameter("songName");
-			album = req.getParameter("album");
-			artist = req.getParameter("artist");
-			genre = req.getParameter("genre");
-			rating = parseRating(req.getParameter("rating"));
-			trackNum = req.getParameter("trackNum");
-			discNum = req.getParameter("discNum");
+			songName = getFileName(blobKey);
+			album = "";
+			artist = "";
+			genre = "";
+			rating = null;
+			trackNum = "";
+			discNum = "";
 		}
 
-		String owner = fred.getUserId();
-
+		String owner = user.getUserId();
 		log.info("Artist : " + artist);
-		
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + ((blobKey[ART] == null) ? "No art Data" : blobKey[ART].toString()));
-		
-
-		String[] tags = parseTags(req.getParameter("tags"));
-
-		for ( String t : tags) {
-			log.info("Tag : " + t);
-		}
-		Text comment = null;
-		if (req.getParameter("comment")!=null) {
-			comment = new Text(req.getParameter("comment"));
-		}
-		
-		
-		Music music = new Music(owner,songName,album,artist,genre,blobKey[DATA],blobKey[ART],rating,tags,trackNum,discNum,comment);
+		log.info("BlobKey DATA: " + blobKey.toString());
+		Music music = new Music(owner,songName,album,artist,genre,blobKey,null,rating,null,trackNum,discNum,null);
 
 		return music;
 	}
 
-	public Video createVideo(HttpServletRequest req,BlobKey[] blobKey,User fred) {
-
-		String owner = fred.getUserId();
-		
-		int length = tryParseInt(req.getParameter("length"));
-		
-		String title = req.getParameter("title");
-		String director = req.getParameter("director");
-
-		log.info("director : " + director);
-
-		log.info("BlobKey DATA: " + blobKey[DATA].toString() + "\n BlobKey Art: " + ((blobKey[ART] == null) ? "No art Data" : blobKey[ART].toString()));
-		
-		Rating rating = parseRating(req.getParameter("rating"));
-
-		String[] tags = parseTags(req.getParameter("tags"));
-		String[] actors = parseTags(req.getParameter("actors"));
-
-		for ( String t : tags) {
-			log.info("Tag : " + t);
-		}
-		Text comment = null;
-		if (req.getParameter("comment")!=null) {
-			comment = new Text(req.getParameter("comment"));
-		}
-		
-		Video video = new Video(owner,length,title,director,actors,tags,blobKey[DATA],blobKey[ART],rating,comment);
+	public Video createVideo(HttpServletRequest req,BlobKey blobKey,User user) {
+		String owner = user.getUserId();
+		String title = getFileName(blobKey);
+		log.info("BlobKey " + blobKey.toString());
+		Video video = new Video(owner,title,"",null,null,blobKey,null,null);
 
 		return video;
 	}

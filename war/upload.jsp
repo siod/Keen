@@ -1,13 +1,3 @@
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
-
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%
-	BlobstoreService blobServ = BlobstoreServiceFactory.getBlobstoreService();
-%>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,182 +7,107 @@
     <meta name="author" content="">
 
     <jsp:include page="/includes.jsp"/>
-	<script type="text/javascript" src="js/keen.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" id="theme">
+	<script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
+	<script type="text/javascript" src="js/jquery.fileupload.js"></script>
+	<script type="text/javascript" src="js/jquery.fileupload-ui.js"></script>
+	<link rel="stylesheet" href="css/jquery.fileupload-ui.css">
 
 	</head>
 
-	<body onload="checkType()">
+	<body onload="setupFileUpload()">
 		<jsp:include page="/topbar.jsp"/>
 	
 		<div class="container">
-			<%
-			UserService us = UserServiceFactory.getUserService();
-			User fred = us.getCurrentUser();
-			if (fred != null) {
-			%>
-			<div id="image-header" class="page-header">
-    			<h1>Upload Images <small>Input the details then hit Upload!</small></h1>
- 			 </div>
-			<%String uploadUrl = blobServ.createUploadUrl("/upload");%>
+			<div id="header" class="page-header">
+    			<h1>Upload Media <small>Drag and drop media files to add them to Keen</small></h1>
+ 			</div>
+			<div class="alert-message warning">
+				<p>Currently Music only supports mp3's</p>
+			</div>
+			<div class="alert-message warning">
+				<p>Currently Video only supports m4v's</p>
+			</div>
+			<div id="fileupload">
+			  <form class="uploadform" method="post" enctype="multipart/form-data">
+				<div class="fileupload-buttonbar">
+				 <label class="fileinput-button">
+				  <span>Add files</span>
+				  <input type="file" name="myFile" multiple>
+				 </label>
+				 <button type="submit" class="start">Start upload</button>
+				</div>
+			  </form>
+			  <div id="uploadArea" class="fileupload-content">
+				<table class="files"></table>
+				<div class="fileupload-progressbar"></div>
+			  </div>
+			</div>
 
-			<form id="image" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="content" value="image" />
-				<div class="clearfix">
-					<label for="">Artist</label>
-					<div class="input">
-						<input type="text" name="artist" class="xlarge" size="30"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Title</label>
-					<div class="input">
-						<input type="text" name="title" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Comment</label>
-					<div class="input">
-						<textarea class="xxlarge" name="comment"></textarea>
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Tags (Use ";" to seperate)</label>
-					<div class="input">
-						<input type="text" name="tags" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Rating</label>
-					<div class="input">
-						<select name="rating">
-							<option value="1"> 1 </option>
-							<option value="2"> 2 </option>
-							<option value="3"> 3 </option>
-							<option value="4"> 4 </option>
-							<option value="5"> 5 </option>
-							<option value="6"> 6 </option>
-							<option value="7"> 7 </option>
-							<option value="8"> 8 </option>
-							<option value="9"> 9 </option>
-							<option value="10"> 10 </option>
-						</select> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">File to Store</label>
-					<div class="input">
-						<input type="file" name="myFile" class="input-file"> 
-					</div>
-				</div>
-				
-				<div class="actions">
-					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
-				</div>
-			</form>
-			<div id="music-header" class="page-header">
-    			<h1>Upload Music <small>Input the details then hit Upload!</small></h1>
- 			 </div>
-			<form id="music" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="content" value="music" />
-				<div class="clearfix error">
-					<label for="">File to Store</label>
-					<div class="input">
-						<input type="file" name="myFile" class="input-file error"> 
-						<span class="help-inline">Currently Only Mp3's are supported</span>
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Tags (Use ";" to seperate)</label>
-					<div class="input">
-						<input type="text" name="tags" class="xlarge"> 
-					</div>
-				</div>
-			<div class="actions">
-					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
-				</div>
-			</form>
-			<div id="video-header" class="page-header">
-    			<h1>Upload Video <small>Input the details then hit Upload!</small></h1>
- 			 </div>
-			<form id="video" action="<%= uploadUrl %>" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="content" value="video" />
-				<div class="clearfix">
-					<label for="">Title</label>
-					<div class="input">
-						<input type="text" name="title" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Director</label>
-					<div class="input">
-						<input type="text" name="director" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Comment</label>
-					<div class="input">
-						<textarea class="xxlarge" name="comment"></textarea>
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Actors</label>
-					<div class="input">
-						<textarea class="xxlarge" name="actors"></textarea>
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Tags (Use ";" to seperate)</label>
-					<div class="input">
-						<input type="text" name="tags" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">File to Store</label>
-					<div class="input">
-						<input type="file" name="myFile" class="input-file"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Box Art</label>
-					<div class="input">
-						<input type="file" name="art" class="input-file"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Length</label>
-					<div class="input">
-						<input type="text" name="length" class="xlarge"> 
-					</div>
-				</div>
-				<div class="clearfix">
-					<label for="">Rating</label>
-					<div class="input">
-						<select name="Rating">
-							<option value="1"> 1 </option>
-							<option value="2"> 2 </option>
-							<option value="3"> 3 </option>
-							<option value="4"> 4 </option>
-							<option value="5"> 5 </option>
-							<option value="6"> 6 </option>
-							<option value="7"> 7 </option>
-							<option value="8"> 8 </option>
-							<option value="9"> 9 </option>
-							<option value="10"> 10 </option>
-						</select> 
-					</div>
-				</div>
-				<div class="actions">
-					<button class="btn primary" type="submit" > Upload</button><button type="reset" class="btn">Cancel</button>
-				</div>
-			</form>
+<script id="template-upload" type="text/x-jquery-tmpl">
+    <tr class="template-upload{{if error}} ui-state-error{{/if}}">
+        <td class="preview"></td>
+        <td class="name">${name}</td>
+        <td class="size">${sizef}</td>
+        {{if error}}
+            <td class="error" colspan="2">Error:
+                {{if error === 'maxFileSize'}}File is too big
+                {{else error === 'minFileSize'}}File is too small
+                {{else error === 'acceptFileTypes'}}Filetype not allowed
+                {{else error === 'maxNumberOfFiles'}}Max number of files exceeded
+                {{else}}${error}
+                {{/if}}
+            </td>
+        {{else}}
+            <td class="progress"><div></div></td>
+            <td class="start"><button>Start</button></td>
+        {{/if}}
+        <td class="cancel"><button>Cancel</button></td>
+    </tr>
+</script>
+<script id="template-download" type="text/x-jquery-tmpl">
+    <tr class="template-download{{if error}} ui-state-error{{/if}}">
+        {{if error}}
+            <td></td>
+            <td class="name">${name}</td>
+            <td class="size">${sizef}</td>
+            <td class="error" colspan="2">Error:
+                {{if error === 1}}File exceeds upload_max_filesize (php.ini directive)
+                {{else error === 2}}File exceeds MAX_FILE_SIZE (HTML form directive)
+                {{else error === 3}}File was only partially uploaded
+                {{else error === 4}}No File was uploaded
+                {{else error === 5}}Missing a temporary folder
+                {{else error === 6}}Failed to write file to disk
+                {{else error === 7}}File upload stopped by extension
+                {{else error === 'maxFileSize'}}File is too big
+                {{else error === 'minFileSize'}}File is too small
+                {{else error === 'acceptFileTypes'}}Filetype not allowed
+                {{else error === 'maxNumberOfFiles'}}Max number of files exceeded
+                {{else error === 'uploadedBytes'}}Uploaded bytes exceed file size
+                {{else error === 'emptyResult'}}Empty file upload result
+                {{else}}${error}
+                {{/if}}
+            </td>
+        {{else}}
+            <td class="preview">
+                {{if thumbnail_url}}
+                    <a href="${url}" target="_blank"><img src="${thumbnail_url}"></a>
+                {{/if}}
+            </td>
+            <td class="name">
+                <a href="${url}"{{if thumbnail_url}} target="_blank"{{/if}}>${name}</a>
+            </td>
+            <td class="size">${sizef}</td>
+            <td colspan="2"></td>
+        {{/if}}
+        <td class="delete">
+            <button data-type="${delete_type}" data-url="${delete_url}">Delete</button>
+        </td>
+    </tr>
+</script>
 
-			<%
-			} else {
-			%>
-			<p> Login to upload </p>
-			<%
-			}
-			%>
-		</div>
+	</div>
 	</body>
 <html>

@@ -66,8 +66,6 @@ public class VideoServlet extends HttpServlet {
 	private void videoBlobs(Video video, List<BlobKey> markedBlobs) {
 		if (video.data != null)
 			markedBlobs.add(video.data);
-		if (video.artData != null)
-			markedBlobs.add(video.artData);
 	}
 
 	private Long parseId(String sid) {

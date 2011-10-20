@@ -8,3 +8,17 @@ div#content {
 	margin-top:40px;
 
 }
+.uploadform {
+	margin-bottom: 0px;
+}
+.uploadBar {
+	background:#ffffff;
+}
+.uploadBtn {
+	color:#ffffff;
+	background:#0064cd;
+}
+#uploadArea {
+	min-height:300px;
+}
+

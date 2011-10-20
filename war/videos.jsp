@@ -128,7 +128,7 @@
 			Query<Video> query = dao.ofy().query(Video.class).filter("owner",fred.getUserId());
 			%>
 				<div class="page-header">
-				<h1>Video <small><a href="/upload.jsp?video=1">Upload Video</a></small></h1>
+				<h1>Video <small><a href="/upload.jsp">Upload Video</a></small></h1>
 				</div>
 				<table class="zebra-striped" id="videoTable">
 					<thead>

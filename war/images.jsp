@@ -45,17 +45,18 @@
 				int i = 0;
 				for (Image img : query) {
 					String temp = "";
-				for (String tag : img.tags)
-					temp += "<span class=\"label success\">" + tag + "</span> ";
+				if (img.tags != null) {
+					for (String tag : img.tags)
+						temp += "<span class=\"label success\">" + tag + "</span> ";
+				}
 				%>
 						{
 					id: '<%= img.id%>',
 					title: '<%= img.title %>',
 					idata: '<%= is.getServingUrl(img.data) %>',
 					ddata: '<%= img.data.getKeyString() %>',
-					comment: "<%= img.comment.getValue() %>",
-					artist: '<%= img.artist %>',
-					rating: '<%= img.rating.getRating() %>',
+					comment: "<%= (img.comment != null) ? img.comment.getValue() : "" %>",
+					rating: '<%= (img.comment != null) ? img.rating.getRating() : "" %>',
 					date: '<%= img.date.getDay() + " / " + img.date.getMonth() + " / " + (img.date.getYear() - 100) %>',
 					tags: '<%= temp %>'
 					<% if (i != query.count() - 1) { %>
@@ -89,7 +90,7 @@
 			}
 			function addNewTableRow(image) {
 				$('#imageTable').append('<tr id="' + image.id + '"> <td>' +image.title 
-						+ '</td><td> ' + image.artist + ' </td> <td> ' + image.rating 
+						+ '</td><td> ' + image.rating 
 						+ '</td> <td> ' + image.date + '</td> <td> ' + image.comment 
 						+ ' </td> <td> ' + image.tags 
 						+ ' </td> <td> <a class="btn info" rel="gallery" href="' + image.idata 
@@ -116,7 +117,7 @@
 	<div id="content" style="height:100%;">
 	
 	<div class="page-header">
-    	<h1>Images <small><a href="/upload.jsp?image=1">Upload Images</a></small></h1>
+    	<h1>Images <small><a href="/upload.jsp">Upload Images</a></small></h1>
  	</div>
 	<ul class="tabs" data-tabs="tabs">
 		<li class="active"><a href="#imageTableDiv">List</a></li>
@@ -128,7 +129,6 @@
 				<thead>
 					<tr> 
 						<th class='header'>Title</th>
-						<th class='blue header'>Taken by</th>
 						<th class='red header'>Rating</th>
 						<th class='green header'>Date Taken</th>
 						<th class='yellow header'>Comment</th>
