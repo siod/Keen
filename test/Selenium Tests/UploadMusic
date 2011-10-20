@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://keenmediavault.appspot.com/" />
+<title>UploadMusic</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">UploadMusic</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/upload.jsp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#music &gt; div.clearfix &gt; div.input &gt; input[name=&quot;artist&quot;]</td>
+	<td>Artist2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=songName</td>
+	<td>Phone</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#music &gt; div.clearfix &gt; div.input &gt; textarea[name=&quot;comment&quot;]</td>
+	<td>Comment2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#music &gt; div.clearfix &gt; div.input &gt; input[name=&quot;tags&quot;]</td>
+	<td>tag3;tag4;</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#music &gt; div.clearfix &gt; div.input &gt; input[name=&quot;myFile&quot;]</td>
+	<td>E:\INB372 - Agile Software Development\Assignment - Media Vault\Selenium Tests\phone.mp3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=art</td>
+	<td>http://www.dccrentals.com.au/images/rotary-cell-phone.jpg</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=trackNum</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=discNum</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=genre</td>
+	<td>Blues</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=length</td>
+	<td>3:14</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=Rating</td>
+	<td>label=5</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#music &gt; div.actions &gt; button.btn.primary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Music</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="Sign In">Sign In</a></td></tr>
+<tr><td><a href="Music">Music</a></td></tr>
+<tr><td><a href="MusicUploadLink">MusicUploadLink</a></td></tr>
+<tr><td><a href="Images">Images</a></td></tr>
+<tr><td><a href="ImageUploadLink">ImageUploadLink</a></td></tr>
+<tr><td><a href="Video">Video</a></td></tr>
+<tr><td><a href="UploadVideoLink">UploadVideoLink</a></td></tr>
+<tr><td><a href="Home">Home</a></td></tr>
+<tr><td><a href="Home2">Home2</a></td></tr>
+<tr><td><a href="UploadImages">UploadImages</a></td></tr>
+<tr><td><a href="UploadMusic">UploadMusic</a></td></tr>
+<tr><td><a href="UploadVideo">UploadVideo</a></td></tr>
+<tr><td><a href="NullImage">NullImage</a></td></tr>
+<tr><td><a href="NullMusic">NullMusic</a></td></tr>
+<tr><td><a href="NullVideo">NullVideo</a></td></tr>
+<tr><td><a href="Log Out">Log Out</a></td></tr>
+</tbody></table>
+</body>
+</html>
