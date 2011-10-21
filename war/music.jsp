@@ -56,7 +56,7 @@
 					album: "<%= msc.album %>",
 					artist: "<%= msc.artist %>",
 					genre: "<%= msc.genre %>",
-					rating: "<%= (msc.comment != null) ? msc.rating.getRating() : "" %>",
+					rating: "<%= (msc.rating != null) ? msc.rating.getRating() : "" %>",
 					track: "<%= msc.trackNum %>",
 					disk: "<%= msc.discNum %>",
 					tags: '<%= temp %>'
